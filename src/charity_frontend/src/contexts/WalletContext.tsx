@@ -33,24 +33,24 @@ export const useWallet = () => {
 
 export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // CHROME COMPATIBILITY DEBUG
-  console.log('🚀 WalletProvider: Component initialized');
-  console.error('🚨🚨🚨 WALLET PROVIDER STARTING - THIS MUST APPEAR!');
-  
+  console.log("🚀 WalletProvider: Component initialized");
+  console.error("🚨🚨🚨 WALLET PROVIDER STARTING - THIS MUST APPEAR!");
+
   // Chrome-safe storage detection
   const isStorageAvailable = () => {
     try {
-      const testKey = '__storage_test__';
-      localStorage.setItem(testKey, 'test');
+      const testKey = "__storage_test__";
+      localStorage.setItem(testKey, "test");
       localStorage.removeItem(testKey);
       return true;
     } catch (e) {
-      console.error('❌ Chrome localStorage blocked:', e);
+      console.error("❌ Chrome localStorage blocked:", e);
       return false;
     }
   };
 
-  console.log('🔍 Chrome storage available:', isStorageAvailable());
-  
+  console.log("🔍 Chrome storage available:", isStorageAvailable());
+
   // State management
   const [wallet, setWallet] = useState<WalletInfo>({
     principal: null,
@@ -59,12 +59,12 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('🚀 WalletProvider: State initialized');
-  console.log('🚀 WalletProvider: Initial wallet state:', {
+  console.log("🚀 WalletProvider: State initialized");
+  console.log("🚀 WalletProvider: Initial wallet state:", {
     isConnected: wallet.isConnected,
     principal: wallet.principal?.toString(),
-    hasIdentity: !!wallet.identity
-  });  // Core initialization - runs on every page load/refresh
+    hasIdentity: !!wallet.identity,
+  }); // Core initialization - runs on every page load/refresh
   useEffect(() => {
     console.log("🚀 WalletContext: MAIN useEffect triggered - FRESH LOAD OR REFRESH");
     console.log("🚀 Current URL:", window.location.href);

@@ -15,11 +15,13 @@ A decentralized charity donation platform built on the Internet Computer Protoco
 ## 🏗️ Architecture
 
 ### Backend (Motoko Canisters)
+
 - **Donation Canister**: Core donation logic and campaign management
 - **NFT Canister**: ICRC-721 compliant donation receipt NFTs
 - **ckUSDT Integration**: ICRC-1 token standard support
 
 ### Frontend (React + TypeScript)
+
 - **Modern UI**: Tailwind CSS with responsive design
 - **Wallet Integration**: Multiple wallet provider support
 - **Real-time Updates**: Live donation tracking
@@ -28,6 +30,7 @@ A decentralized charity donation platform built on the Internet Computer Protoco
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - [DFX](https://internetcomputer.org/docs/current/developer-docs/setup/install/) >= 0.15.0
 - [Node.js](https://nodejs.org/) >= 16.0.0
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
@@ -35,27 +38,32 @@ A decentralized charity donation platform built on the Internet Computer Protoco
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd charity-dapp-icp
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start the local Internet Computer replica**
+
    ```bash
    dfx start --background
    ```
 
 4. **Deploy canisters locally**
+
    ```bash
    dfx deploy
    ```
 
 5. **Start the frontend development server**
+
    ```bash
    npm run serve
    ```
@@ -87,17 +95,18 @@ charity-dapp-icp/
 
 ## 🔧 Development Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run build` | Build the frontend |
-| `npm run dev` | Deploy and start development server |
-| `npm run serve` | Start frontend development server |
-| `dfx deploy --network local` | Deploy to local network |
-| `dfx deploy --network ic` | Deploy to IC mainnet |
+| Command                      | Description                         |
+| ---------------------------- | ----------------------------------- |
+| `npm run build`              | Build the frontend                  |
+| `npm run dev`                | Deploy and start development server |
+| `npm run serve`              | Start frontend development server   |
+| `dfx deploy --network local` | Deploy to local network             |
+| `dfx deploy --network ic`    | Deploy to IC mainnet                |
 
 ## 🏛️ Smart Contract Functions
 
 ### Donation Canister
+
 - `createCampaign()` - Create a new charity campaign
 - `donate()` - Make a donation to a campaign
 - `getDonations()` - Get donations for a campaign
@@ -105,6 +114,7 @@ charity-dapp-icp/
 - `getTotalStats()` - Get platform statistics
 
 ### NFT Canister
+
 - `mintDonationNFT()` - Mint NFT receipt for donation
 - `tokenMetadata()` - Get NFT metadata
 - `tokensOf()` - Get NFTs owned by user
@@ -113,6 +123,7 @@ charity-dapp-icp/
 ## 💰 ckUSDT Integration
 
 This dApp uses ckUSDT (Chain-key USDT) for donations:
+
 - **Stability**: Pegged to USD value
 - **Low Fees**: Minimal transaction costs on ICP
 - **Fast Transactions**: Near-instant settlement
@@ -137,6 +148,7 @@ This dApp uses ckUSDT (Chain-key USDT) for donations:
 ## 🌐 Deployment
 
 ### Local Development
+
 ```bash
 # Start local replica
 dfx start --background
@@ -149,12 +161,14 @@ npm run serve
 ```
 
 ### Testnet Deployment
+
 ```bash
 # Deploy to IC testnet
 dfx deploy --network ic --wallet $(dfx identity get-wallet)
 ```
 
 ### Mainnet Deployment
+
 ```bash
 # Deploy to IC mainnet
 dfx deploy --network ic --with-cycles 1000000000000
@@ -204,12 +218,14 @@ CharityChain/
 ## 🔧 Troubleshooting
 
 ### Wallet Connection Issues
+
 - **Clear browser cache**: Settings → Clear browsing data
 - **Try alternative URL**: Use `127.0.0.1:4943` instead of `localhost:4943`
 - **Check browser compatibility**: Chrome, Safari, Firefox supported
 - **Disable extensions**: Some extensions may block wallet connections
 
 ### Development Issues
+
 - **Clean rebuild**: `dfx stop && dfx start --clean && npm run build && dfx deploy`
 - **Check DFX status**: `dfx ping local`
 - **Verify canisters**: `dfx canister status --all`

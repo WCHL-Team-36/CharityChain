@@ -1,22 +1,22 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import CampaignsPage from './pages/CampaignsPage';
-import CampaignDetailPage from './pages/CampaignDetailPage';
-import CreateCampaignPage from './pages/CreateCampaignPage';
-import DashboardPage from './pages/DashboardPage';
-import NFTsPage from './pages/NFTsPage';
-import { ToastContainer } from './components/ToastContainer';
-import { WalletProvider } from './contexts/WalletContext';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import HomePage from "./pages/HomePage";
+import CampaignsPage from "./pages/CampaignsPage";
+import CampaignDetailPage from "./pages/CampaignDetailPage";
+import CreateCampaignPage from "./pages/CreateCampaignPage";
+import DashboardPage from "./pages/DashboardPage";
+import NFTsPage from "./pages/NFTsPage";
+import { ToastContainer } from "./components/ToastContainer";
+import { WalletProvider } from "./contexts/WalletContext";
 
 function App() {
   return (
     <WalletProvider>
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
-        
+
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -27,7 +27,7 @@ function App() {
             <Route path="/nfts" element={<NFTsPage />} />
           </Routes>
         </main>
-        
+
         <Footer />
         <ToastContainer />
       </div>
@@ -35,4 +35,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
