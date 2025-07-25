@@ -10,6 +10,8 @@ const donationCanisterIdl = ({ IDL }: any) => {
     'CampaignInactive': IDL.Null,
     'Unauthorized': IDL.Null,
     'TransferFailed': IDL.Null,
+    'CampaignExpired': IDL.Null,
+    'InvalidInput': IDL.Null,
   });
 
   const Campaign = IDL.Record({
@@ -17,7 +19,7 @@ const donationCanisterIdl = ({ IDL }: any) => {
     'title': IDL.Text,
     'description': IDL.Text,
     'recipient': IDL.Principal,
-    'targetAmount': IDL.Nat,
+    'goalAmount': IDL.Nat,
     'currentAmount': IDL.Nat,
     'isActive': IDL.Bool,
     'createdAt': IDL.Int,
@@ -40,10 +42,10 @@ const donationCanisterIdl = ({ IDL }: any) => {
     'createCampaign': IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int)], [Result(Campaign, IDL.Text)], []),
     'getCampaigns': IDL.Func([], [IDL.Vec(Campaign)], ['query']),
     'getCampaign': IDL.Func([IDL.Text], [IDL.Opt(Campaign)], ['query']),
-    'donate': IDL.Func([IDL.Text, IDL.Nat, IDL.Opt(IDL.Text)], [Result(Donation, DonationError)], []),
+    'donate': IDL.Func([IDL.Text, IDL.Nat], [Result(IDL.Null, DonationError)], []),
     'getDonations': IDL.Func([IDL.Text], [IDL.Vec(Donation)], ['query']),
     'getDonationsByDonor': IDL.Func([IDL.Principal], [IDL.Vec(Donation)], ['query']),
-    'withdraw': IDL.Func([IDL.Text], [Result(IDL.Nat, DonationError)], []),
+    'withdraw': IDL.Func([IDL.Text], [Result(IDL.Null, DonationError)], []),
     'getTotalStats': IDL.Func([], [IDL.Record({
       'totalDonations': IDL.Nat,
       'totalAmount': IDL.Nat,
@@ -82,147 +84,108 @@ const nftCanisterIdl = ({ IDL }: any) => {
   });
 };
 
+// Canister IDs
+const DONATION_CANISTER_ID = 'u6s2n-gx777-77774-qaaba-cai';
+const NFT_CANISTER_ID = 'uzt4z-lp777-77774-qaabq-cai';
+
 class CanisterService {
   private agent: HttpAgent;
   private donationActor: any;
   private nftActor: any;
 
   constructor(identity?: any) {
+    console.log('🔧 CanisterService: Initializing with identity:', identity ? 'Present' : 'Anonymous');
+    
     // Create agent with identity
     this.agent = new HttpAgent({
       host: process.env.DFX_NETWORK === 'local' ? 'http://127.0.0.1:4943' : 'https://mainnet.dfinity.network',
       identity,
     });
 
+    console.log('�� CanisterService: Agent created, host:', process.env.DFX_NETWORK === 'local' ? 'http://127.0.0.1:4943' : 'https://mainnet.dfinity.network');
+
     // Fetch root key for local development
     if (process.env.DFX_NETWORK === 'local') {
-      this.agent.fetchRootKey().catch(err => {
-        console.warn('Unable to fetch root key. Check to ensure that your local replica is running');
-        console.error(err);
+      console.log('🔧 CanisterService: Fetching root key for local development...');
+      this.agent.fetchRootKey().then(() => {
+        console.log('✅ CanisterService: Root key fetched successfully');
+      }).catch(err => {
+        console.error('❌ CanisterService: Unable to fetch root key:', err);
+        console.warn('Check to ensure that your local replica is running');
       });
     }
 
-    // Canister IDs from deployment
-    const donationCanisterId = process.env.DFX_NETWORK === 'local' || window.location.hostname.includes('localhost')
-      ? 'u6s2n-gx777-77774-qaaba-cai'  // Local deployment ID
-      : process.env.CANISTER_ID_DONATION_CANISTER || 'u6s2n-gx777-77774-qaaba-cai';
-    
-    const nftCanisterId = process.env.DFX_NETWORK === 'local' || window.location.hostname.includes('localhost')
-      ? 'uzt4z-lp777-77774-qaabq-cai'  // Local deployment ID
-      : process.env.CANISTER_ID_NFT_CANISTER || 'uzt4z-lp777-77774-qaabq-cai';
-
     // Create actors
+    console.log('🔧 CanisterService: Creating actors...');
     this.donationActor = Actor.createActor(donationCanisterIdl, {
       agent: this.agent,
-      canisterId: donationCanisterId,
+      canisterId: DONATION_CANISTER_ID,
     });
 
     this.nftActor = Actor.createActor(nftCanisterIdl, {
       agent: this.agent,
-      canisterId: nftCanisterId,
+      canisterId: NFT_CANISTER_ID,
     });
-  }
-
-  // Campaign methods
-  async createCampaign(data: CreateCampaignData): Promise<Campaign> {
-    const result = await this.donationActor.createCampaign(
-      data.id,
-      data.title,
-      data.description,
-      data.targetAmount,
-      data.endDate ? [data.endDate] : []
-    );
-
-    if ('err' in result) {
-      throw new Error(result.err);
-    }
-
-    return result.ok;
+    
+    console.log('✅ CanisterService: Actors created successfully');
+    console.log('🔧 CanisterService: Donation canister ID:', DONATION_CANISTER_ID);
+    console.log('🔧 CanisterService: NFT canister ID:', NFT_CANISTER_ID);
   }
 
   async getCampaigns(): Promise<Campaign[]> {
-    return await this.donationActor.getCampaigns();
-  }
-
-  async getCampaign(id: string): Promise<Campaign | null> {
-    const result = await this.donationActor.getCampaign(id);
-    return result.length > 0 ? result[0] : null;
-  }
-
-  // Donation methods
-  async donate(campaignId: string, amount: bigint, txHash?: string): Promise<Donation> {
-    const result = await this.donationActor.donate(
-      campaignId,
-      amount,
-      txHash ? [txHash] : []
-    );
-
-    if ('err' in result) {
-      throw new Error(`Donation failed: ${Object.keys(result.err)[0]}`);
+    console.log('🔧 CanisterService: Fetching campaigns...');
+    
+    try {
+      const campaigns = await this.donationActor.getCampaigns();
+      console.log('✅ CanisterService: Retrieved', campaigns.length, 'campaigns');
+      return campaigns;
+    } catch (error) {
+      console.error('❌ CanisterService: Failed to fetch campaigns:', error);
+      throw error;
     }
-
-    return result.ok;
-  }
-
-  async getDonations(campaignId: string): Promise<Donation[]> {
-    return await this.donationActor.getDonations(campaignId);
-  }
-
-  async getDonationsByDonor(donor: Principal): Promise<Donation[]> {
-    return await this.donationActor.getDonationsByDonor(donor);
-  }
-
-  async withdraw(campaignId: string): Promise<bigint> {
-    const result = await this.donationActor.withdraw(campaignId);
-
-    if ('err' in result) {
-      throw new Error(`Withdrawal failed: ${Object.keys(result.err)[0]}`);
-    }
-
-    return result.ok;
   }
 
   async getTotalStats(): Promise<CampaignStats> {
-    return await this.donationActor.getTotalStats();
-  }
-
-  // NFT methods
-  async mintDonationNFT(donationId: bigint, donor: Principal, campaignId: string, amount: bigint): Promise<bigint> {
-    const result = await this.nftActor.mintDonationNFT(donationId, donor, campaignId, amount);
-
-    if ('err' in result) {
-      throw new Error(`NFT minting failed: ${Object.keys(result.err)[0]}`);
+    console.log('�� CanisterService: Fetching total stats...');
+    
+    try {
+      const stats = await this.donationActor.getTotalStats();
+      console.log('✅ CanisterService: Total stats retrieved:', stats);
+      return stats;
+    } catch (error) {
+      console.error('❌ CanisterService: Failed to fetch total stats:', error);
+      throw error;
     }
-
-    return result.ok;
   }
 
-  async getNFTsByOwner(owner: Principal): Promise<bigint[]> {
-    return await this.nftActor.tokensOf(owner);
-  }
+  async createCampaign(data: CreateCampaignData): Promise<Campaign> {
+    console.log('🔧 CanisterService: Creating campaign:', data.title);
+    
+    try {
+      const result = await this.donationActor.createCampaign(
+        data.id,
+        data.title,
+        data.description,
+        data.targetAmount,
+        data.endDate ? [data.endDate] : []
+      );
 
-  async getNFTMetadata(tokenId: bigint): Promise<NFTMetadata | null> {
-    const result = await this.nftActor.tokenMetadata(tokenId);
-    return result.length > 0 ? result[0] : null;
-  }
+      if ('err' in result) {
+        throw new Error(result.err);
+      }
 
-  async getAllNFTs(): Promise<NFTMetadata[]> {
-    return await this.nftActor.getAllNFTs();
-  }
-
-  async getNFTsByCampaign(campaignId: string): Promise<NFTMetadata[]> {
-    return await this.nftActor.getNFTsByCampaign(campaignId);
+      console.log('✅ CanisterService: Campaign created successfully');
+      return result.ok;
+    } catch (error) {
+      console.error('❌ CanisterService: Failed to create campaign:', error);
+      throw error;
+    }
   }
 }
 
-// Singleton pattern for the service
-let canisterServiceInstance: CanisterService | null = null;
-
-export const getCanisterService = (identity?: any): CanisterService => {
-  if (!canisterServiceInstance || identity) {
-    canisterServiceInstance = new CanisterService(identity);
-  }
-  return canisterServiceInstance;
-};
-
 export default CanisterService;
+
+// Export a function to get the service instance
+export const getCanisterService = (identity?: any): CanisterService => {
+  return new CanisterService(identity);
+};

@@ -1,11 +1,11 @@
-import { Principal } from '@dfinity/principal';
+import { Principal } from "@dfinity/principal";
 
 export interface Campaign {
   id: string;
   title: string;
   description: string;
   recipient: Principal;
-  targetAmount: bigint;
+  goalAmount: bigint;
   currentAmount: bigint;
   isActive: boolean;
   createdAt: bigint;
@@ -42,24 +42,15 @@ export interface WalletInfo {
 
 export interface Toast {
   id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
+  type: "success" | "error" | "warning" | "info";
   title: string;
   message?: string;
   duration?: number;
 }
 
-export type DonationError = 
-  | { CampaignNotFound: null }
-  | { InsufficientAmount: null }
-  | { CampaignInactive: null }
-  | { Unauthorized: null }
-  | { TransferFailed: null };
+export type DonationError = { CampaignNotFound: null } | { InsufficientAmount: null } | { CampaignInactive: null } | { Unauthorized: null } | { TransferFailed: null };
 
-export type NFTError = 
-  | { TokenNotFound: null }
-  | { Unauthorized: null }
-  | { AlreadyExists: null }
-  | { InvalidMetadata: null };
+export type NFTError = { TokenNotFound: null } | { Unauthorized: null } | { AlreadyExists: null } | { InvalidMetadata: null };
 
 export interface TransactionResult<T> {
   success: boolean;

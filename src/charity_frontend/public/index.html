@@ -6,11 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CharityChain - Web3 Charity Platform on ICP</title>
     <meta name="description" content="Transparent charity donations using ckUSDT on Internet Computer Protocol" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- CRITICAL DEBUG SCRIPT -->
+    <script>
+      console.log("🔴 INLINE DEBUG: HTML head script running");
+      console.log("🔴 TIMESTAMP:", new Date().toISOString());
+      console.log("🔴 USER AGENT:", navigator.userAgent);
+      console.log("🔴 DOCUMENT STATE:", document.readyState);
+
+      // Global error catcher
+      window.addEventListener("error", function (e) {
+        console.error("🔴 CRITICAL ERROR CAUGHT:", e.error);
+        console.error("🔴 ERROR MESSAGE:", e.message);
+        console.error("🔴 ERROR FILE:", e.filename);
+        console.error("🔴 ERROR LINE:", e.lineno);
+        console.error("🔴 ERROR STACK:", e.error?.stack);
+      });
+
+      window.addEventListener("unhandledrejection", function (e) {
+        console.error("🔴 PROMISE REJECTION:", e.reason);
+      });
+
+      console.log("🔴 INLINE DEBUG: Error handlers set up successfully");
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- BODY DEBUG SCRIPT -->
+    <script>
+      console.log("🟡 BODY DEBUG: Body script running");
+      console.log("🟡 ROOT ELEMENT:", document.getElementById("root"));
+      console.log("🟡 DOCUMENT READY STATE:", document.readyState);
+
+      // Check if we can access basic web APIs
+      console.log("🟡 LOCAL STORAGE:", typeof localStorage !== "undefined" ? "Available" : "Not available");
+      console.log("🟡 SESSION STORAGE:", typeof sessionStorage !== "undefined" ? "Available" : "Not available");
+
+      // Test localStorage
+      try {
+        localStorage.setItem("body_test", "working");
+        console.log("🟡 LOCALSTORAGE TEST:", localStorage.getItem("body_test"));
+      } catch (e) {
+        console.error("🟡 LOCALSTORAGE ERROR:", e);
+      }
+
+      console.log("🟡 BODY DEBUG: All basic checks completed");
+    </script>
   </body>
-</html> 
+</html>

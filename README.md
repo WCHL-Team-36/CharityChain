@@ -179,6 +179,41 @@ dfx deploy --network ic --with-cycles 1000000000000
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 📁 Project Structure
+
+```
+CharityChain/
+├── src/
+│   ├── charity_frontend/           # React frontend application
+│   │   ├── public/                # Static assets
+│   │   └── src/
+│   │       ├── components/        # Reusable React components
+│   │       ├── contexts/          # React context providers
+│   │       ├── pages/             # Page components
+│   │       ├── services/          # API and canister services
+│   │       └── types/             # TypeScript type definitions
+│   ├── donation_canister/         # Core donation logic (Motoko)
+│   └── nft_canister/              # NFT receipt system (Motoko)
+├── dfx.json                       # DFX configuration
+├── package.json                   # Node.js dependencies
+├── webpack.config.js              # Webpack build configuration
+├── tailwind.config.js             # Tailwind CSS configuration
+└── tsconfig.json                  # TypeScript configuration
+```
+
+## 🔧 Troubleshooting
+
+### Wallet Connection Issues
+- **Clear browser cache**: Settings → Clear browsing data
+- **Try alternative URL**: Use `127.0.0.1:4943` instead of `localhost:4943`
+- **Check browser compatibility**: Chrome, Safari, Firefox supported
+- **Disable extensions**: Some extensions may block wallet connections
+
+### Development Issues
+- **Clean rebuild**: `dfx stop && dfx start --clean && npm run build && dfx deploy`
+- **Check DFX status**: `dfx ping local`
+- **Verify canisters**: `dfx canister status --all`
+
 ## 🆘 Support
 
 - **Documentation**: [Internet Computer Docs](https://internetcomputer.org/docs/)

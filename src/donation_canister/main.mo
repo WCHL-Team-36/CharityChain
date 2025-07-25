@@ -141,7 +141,7 @@ actor DonationCanister {
         campaigns.get(id)
     };
     
-    private shared func simulateTokenTransferTo(_recipient: Principal, _amount: Nat): async Bool {
+    private func simulateTokenTransferTo(_recipient: Principal, _amount: Nat): Bool {
     // Dummy transfer, return true to simulate success
     true
 };
@@ -255,7 +255,7 @@ actor DonationCanister {
         campaigns.put(campaignId, updatedCampaign);
 
         // INTERACTIONS: External calls last
-        let transferResult : Bool = await simulateTokenTransferTo(campaign.recipient, withdrawAmount);
+        let transferResult : Bool = simulateTokenTransferTo(campaign.recipient, withdrawAmount);
 
         if (not transferResult) {
           // Gagal transfer, rollback state ke kondisi sebelumnya

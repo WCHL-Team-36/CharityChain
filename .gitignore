@@ -10,6 +10,7 @@ yarn.lock
 dist/
 build/
 .tmp/
+src/charity_frontend/dist/
 
 # Environment variables
 .env
@@ -102,5 +103,13 @@ coverage/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# Debug files (should not be committed)
+debug*.js
+debug*.html
+test*.html
+*debug.js
+comprehensive_debug.*
+chrome_debug.*
 
 charity_app

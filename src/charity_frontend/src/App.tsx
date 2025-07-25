@@ -9,26 +9,29 @@ import CreateCampaignPage from './pages/CreateCampaignPage';
 import DashboardPage from './pages/DashboardPage';
 import NFTsPage from './pages/NFTsPage';
 import { ToastContainer } from './components/ToastContainer';
+import { WalletProvider } from './contexts/WalletContext';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
-      
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/campaigns" element={<CampaignsPage />} />
-          <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
-          <Route path="/create-campaign" element={<CreateCampaignPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/nfts" element={<NFTsPage />} />
-        </Routes>
-      </main>
-      
-      <Footer />
-      <ToastContainer />
-    </div>
+    <WalletProvider>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navbar />
+        
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/campaigns" element={<CampaignsPage />} />
+            <Route path="/campaigns/:id" element={<CampaignDetailPage />} />
+            <Route path="/create-campaign" element={<CreateCampaignPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/nfts" element={<NFTsPage />} />
+          </Routes>
+        </main>
+        
+        <Footer />
+        <ToastContainer />
+      </div>
+    </WalletProvider>
   );
 }
 

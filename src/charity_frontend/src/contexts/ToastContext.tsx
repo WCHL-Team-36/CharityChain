@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Toast } from '../types';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { Toast } from "../types";
 
 interface ToastContextType {
   toasts: Toast[];
-  addToast: (toast: Omit<Toast, 'id'>) => void;
+  addToast: (toast: Omit<Toast, "id">) => void;
   removeToast: (id: string) => void;
+  showToast: (type: Toast["type"], title: string, message?: string, duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -12,7 +13,7 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (context === undefined) {
-    throw new Error('useToast must be used within a ToastProvider');
+    throw new Error("useToast must be used within a ToastProvider");
   }
   return context;
 };
@@ -24,10 +25,10 @@ interface ToastProviderProps {
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = (toast: Omit<Toast, 'id'>) => {
+  const addToast = (toast: Omit<Toast, "id">) => {
     const id = Math.random().toString(36).substring(2, 9);
     const newToast: Toast = { ...toast, id };
-    
+
     setToasts((prev) => [...prev, newToast]);
 
     // Auto remove toast after duration (default 5 seconds)
@@ -41,15 +42,16 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
+  const showToast = (type: Toast["type"], title: string, message?: string, duration?: number) => {
+    addToast({ type, title, message, duration });
+  };
+
   const value: ToastContextType = {
     toasts,
     addToast,
     removeToast,
+    showToast,
   };
 
-  return (
-    <ToastContext.Provider value={value}>
-      {children}
-    </ToastContext.Provider>
-  );
-}; 
+  return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
+};

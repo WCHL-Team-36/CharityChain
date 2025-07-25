@@ -1,12 +1,227 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useWallet } from "../contexts/WalletContext";
+import { useToast } from "../contexts/ToastContext";
+import CanisterService from "../services/canisterService";
+import { CreateCampaignData } from "../types";
 
 const CreateCampaignPage: React.FC = () => {
+  const { wallet } = useWallet();
+  const { showToast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    id: "",
+    title: "",
+    description: "",
+    targetAmount: "",
+    endDate: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const generateCampaignId = () => {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 1000);
+    return `campaign_${timestamp}_${randomNum}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!wallet.isConnected) {
+      showToast("error", "Wallet Connection Required", "Please connect your wallet to create a campaign");
+      return;
+    }
+
+    // Validation
+    if (!formData.title.trim() || !formData.description.trim() || !formData.targetAmount) {
+      showToast("error", "Missing Fields", "Please fill in all required fields");
+      return;
+    }
+
+    const targetAmount = parseFloat(formData.targetAmount);
+    if (targetAmount <= 0) {
+      showToast("error", "Invalid Amount", "Target amount must be greater than 0");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const campaignData: CreateCampaignData = {
+        id: formData.id || generateCampaignId(),
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        targetAmount: BigInt(Math.floor(targetAmount * 100)), // Convert to smallest unit (cents)
+        endDate: formData.endDate ? BigInt(new Date(formData.endDate).getTime() * 1000000) : undefined, // Convert to nanoseconds
+      };
+
+      const canisterService = new CanisterService(wallet.identity);
+      const campaign = await canisterService.createCampaign(campaignData);
+
+      showToast("success", "Campaign Created!", `Campaign "${campaign.title}" has been created successfully`);
+
+      // Reset form
+      setFormData({
+        id: "",
+        title: "",
+        description: "",
+        targetAmount: "",
+        endDate: "",
+      });
+    } catch (error: any) {
+      console.error("Error creating campaign:", error);
+      showToast("error", "Failed to Create Campaign", error.message || "An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!wallet.isConnected) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Create Campaign</h1>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+            <p className="text-yellow-800">Please connect your wallet to create a campaign.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Create Campaign</h1>
-      <p className="text-gray-600">Campaign creation functionality will be implemented here.</p>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Campaign</h1>
+
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Campaign ID */}
+          <div>
+            <label htmlFor="id" className="block text-sm font-medium text-gray-700 mb-1">
+              Campaign ID (Optional)
+            </label>
+            <input
+              type="text"
+              id="id"
+              name="id"
+              value={formData.id}
+              onChange={handleInputChange}
+              placeholder="Leave empty to auto-generate"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">If left empty, an ID will be automatically generated</p>
+          </div>
+
+          {/* Campaign Title */}
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              Campaign Title *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              required
+              placeholder="Enter campaign title"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          {/* Campaign Description */}
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              Campaign Description *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              rows={4}
+              placeholder="Describe your campaign, its goals, and how donations will be used"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          {/* Target Amount */}
+          <div>
+            <label htmlFor="targetAmount" className="block text-sm font-medium text-gray-700 mb-1">
+              Target Amount (USD) *
+            </label>
+            <input
+              type="number"
+              id="targetAmount"
+              name="targetAmount"
+              value={formData.targetAmount}
+              onChange={handleInputChange}
+              required
+              min="0"
+              step="0.01"
+              placeholder="Enter target amount in USD"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          {/* End Date */}
+          <div>
+            <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
+              End Date (Optional)
+            </label>
+            <input
+              type="datetime-local"
+              id="endDate"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleInputChange}
+              min={new Date().toISOString().slice(0, 16)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">Leave empty for campaigns without an end date</p>
+          </div>
+
+          {/* Submit Button */}
+          <div className="pt-4">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Creating Campaign...
+                </div>
+              ) : (
+                "Create Campaign"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Help Section */}
+      <div className="mt-8 bg-gray-50 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Campaign Creation Tips</h3>
+        <ul className="space-y-2 text-sm text-gray-600">
+          <li>• Choose a clear and compelling title that describes your cause</li>
+          <li>• Provide detailed information about how donations will be used</li>
+          <li>• Set a realistic target amount based on your actual needs</li>
+          <li>• Consider setting an end date to create urgency</li>
+          <li>• Make sure you have Internet Identity connected to receive donations</li>
+        </ul>
+      </div>
     </div>
   );
 };
 
-export default CreateCampaignPage; 
+export default CreateCampaignPage;
