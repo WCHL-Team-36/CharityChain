@@ -132,11 +132,33 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           console.log(`   Principal: ${attempt.principal ? attempt.principal.substring(0, 20) + "..." : "null"}`);
           console.log(`   PrivateKey: ${attempt.privateKey ? "EXISTS(length=" + attempt.privateKey.length + ")" : "null"}`);
 
-          if (attempt.connected === "true" && attempt.principal && attempt.privateKey) {
+          if (attempt.connected === "true" && attempt.principal) {
             console.log(`🎯 VALID DATA FOUND IN: ${attempt.name}`);
 
             try {
-              // Parse and restore identity
+              // Check if privateKey exists for Internet Identity
+              if (!attempt.privateKey) {
+                console.log("🔌 PLUG WALLET RESTORATION: No privateKey - using Principal directly");
+                const restoredPrincipal = Principal.fromText(attempt.principal);
+                
+                const walletState = {
+                  principal: restoredPrincipal,
+                  isConnected: true,
+                  balance: BigInt(0),
+                  identity: undefined, // Plug handles identity internally
+                };
+
+                console.log("📱 SETTING PLUG WALLET STATE NOW...");
+                setWallet(walletState);
+
+                console.log("🎉🎉🎉 PLUG WALLET RESTORATION COMPLETED SUCCESSFULLY!");
+                console.log("🎉 Strategy used:", attempt.name);
+                console.log("🎉 Principal:", restoredPrincipal.toString());
+                
+                return true;
+              }
+
+              // Parse and restore identity for Internet Identity
               console.log("🔑 Parsing private key...");
               const privateKeyArray = JSON.parse(attempt.privateKey);
               const privateKey = new Uint8Array(privateKeyArray);

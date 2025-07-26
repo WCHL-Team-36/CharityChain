@@ -9,7 +9,7 @@ import CreateCampaignPage from "./pages/CreateCampaignPage";
 import DashboardPage from "./pages/DashboardPage";
 import NFTsPage from "./pages/NFTsPage";
 import { ToastContainer } from "./components/ToastContainer";
-import { WalletProvider } from "./contexts/WalletContext";
+import { WalletProvider } from "./contexts/EnhancedWalletContext";
 
 function App() {
   return (

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plug Wallet Detection Test</title>
+</head>
+<body>
+    <h1>🔍 Plug Wallet Detection Test</h1>
+    <div id="results"></div>
+    <button onclick="testPlugDetection()">Test Plug Detection</button>
+    <button onclick="testPlugConnection()">Test Plug Connection</button>
+
+    <script>
+        function log(message) {
+            console.log(message);
+            const results = document.getElementById('results');
+            results.innerHTML += '<div>' + message + '</div>';
+        }
+
+        function testPlugDetection() {
+            log('🔍 === PLUG WALLET DETECTION TEST ===');
+            log('typeof window: ' + typeof window);
+            log('window is defined: ' + (typeof window !== 'undefined'));
+            
+            if (typeof window !== 'undefined') {
+                log('window.ic exists: ' + !!window.ic);
+                
+                if (window.ic) {
+                    log('window.ic keys: ' + Object.keys(window.ic));
+                    log('window.ic.plug exists: ' + !!window.ic.plug);
+                    
+                    if (window.ic.plug) {
+                        log('window.ic.plug is object: ' + (typeof window.ic.plug === 'object'));
+                        log('window.ic.plug keys: ' + Object.keys(window.ic.plug));
+                        log('requestConnect method exists: ' + (typeof window.ic.plug.requestConnect === 'function'));
+                        log('getPrincipal method exists: ' + (typeof window.ic.plug.getPrincipal === 'function'));
+                        log('createAgent method exists: ' + (typeof window.ic.plug.createAgent === 'function'));
+                    }
+                } else {
+                    log('❌ window.ic does not exist');
+                }
+            }
+            
+            // Check for other wallet detection methods
+            log('--- Alternative Detection Methods ---');
+            log('window.icConnector exists: ' + !!window.icConnector);
+            log('window.plug exists: ' + !!window.plug);
+        }
+
+        async function testPlugConnection() {
+            log('🔌 === PLUG WALLET CONNECTION TEST ===');
+            
+            if (!window.ic?.plug) {
+                log('❌ Plug Wallet not detected - cannot test connection');
+                return;
+            }
+
+            try {
+                const config = {
+                    whitelist: [
+                        'u6s2n-gx777-77774-qaaba-cai', // donation_canister
+                        'uzt4z-lp777-77774-qaabq-cai', // nft_canister
+                        'uxrrr-q7777-77774-qaaaq-cai', // charity_frontend
+                    ],
+                    host: 'http://127.0.0.1:4943',
+                    timeout: 60000,
+                };
+
+                log('📋 Connection config: ' + JSON.stringify(config, null, 2));
+                log('🔌 Attempting connection...');
+                
+                const connected = await window.ic.plug.requestConnect(config);
+                log('Connection result: ' + connected);
+                
+                if (connected) {
+                    const principal = await window.ic.plug.getPrincipal();
+                    log('✅ Connected! Principal: ' + principal.toString());
+                } else {
+                    log('❌ Connection failed or rejected by user');
+                }
+                
+            } catch (error) {
+                log('💥 Connection error: ' + error.message);
+                log('Error details: ' + JSON.stringify(error, null, 2));
+            }
+        }
+
+        // Auto-run detection test when page loads
+        window.addEventListener('load', () => {
+            log('📱 Page loaded, waiting for extensions...');
+            
+            // Test immediately
+            testPlugDetection();
+            
+            // Test after 2 seconds
+            setTimeout(() => {
+                log('--- RETEST AFTER 2 SECONDS ---');
+                testPlugDetection();
+            }, 2000);
+            
+            // Test after 5 seconds
+            setTimeout(() => {
+                log('--- RETEST AFTER 5 SECONDS ---');
+                testPlugDetection();
+            }, 5000);
+            
+            // Test after 10 seconds
+            setTimeout(() => {
+                log('--- FINAL TEST AFTER 10 SECONDS ---');
+                testPlugDetection();
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

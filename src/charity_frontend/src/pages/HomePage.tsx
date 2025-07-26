@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useWallet } from "../contexts/WalletContext";
+import { useWallet } from "../contexts/EnhancedWalletContext";
 import { getCanisterService } from "../services/canisterService";
 import { Campaign, CampaignStats } from "../types";
 
@@ -16,10 +16,16 @@ const HomePage: React.FC = () => {
 
   const loadData = async () => {
     try {
-      const canisterService = getCanisterService(wallet.identity);
+      setIsLoading(true);
+      
+      // Use canister service (can work without wallet for reading)
+      const canisterService = getCanisterService();
 
       try {
-        const [statsData, campaigns] = await Promise.all([canisterService.getTotalStats(), canisterService.getCampaigns()]);
+        const [statsData, campaigns] = await Promise.all([
+          canisterService.getTotalStats(), 
+          canisterService.getCampaigns()
+        ]);
 
         setStats(statsData);
         // Show top 3 campaigns by progress
@@ -70,7 +76,7 @@ const HomePage: React.FC = () => {
           <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">Send crypto donations to creators with ckUSDT on Internet Computer. 100% transparent, low fees, instant delivery.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
             <Link to="/campaigns" className="bg-white text-orange-500 hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-colors shadow-lg">
-              ✨ Discover Creators
+              ✨ Discover Campaigns
             </Link>
             <Link to="/create-campaign" className="bg-white/20 hover:bg-white/30 backdrop-blur font-semibold py-3 px-6 rounded-full transition-colors border border-white/30">
               🚀 Start Receiving
@@ -78,6 +84,71 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Wallet Setup Guide - Show only if wallet not connected */}
+      {!wallet?.isConnected && (
+        <section className="py-12 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">🔗 Get Started</h2>
+              <p className="text-gray-600">Connect your Plug Wallet to start donating or creating campaigns</p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Setup Guide</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</span>
+                      <div>
+                        <p className="font-medium text-gray-900">Install Plug Wallet</p>
+                        <p className="text-sm text-gray-600">Download the browser extension from <a href="https://plugwallet.ooo/" target="_blank" className="text-blue-600 underline">plugwallet.ooo</a></p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">2</span>
+                      <div>
+                        <p className="font-medium text-gray-900">Open in Browser</p>
+                        <p className="text-sm text-gray-600">Use Chrome or Firefox (not VS Code browser) for best experience</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">3</span>
+                      <div>
+                        <p className="font-medium text-gray-900">Connect & Start</p>
+                        <p className="text-sm text-gray-600">Click "Connect Wallet" in the navigation to get started</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="bg-gradient-to-br from-purple-500 to-blue-500 w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <span className="text-white text-4xl font-bold">P</span>
+                  </div>
+                  <p className="text-gray-600 mb-4">Wallet Status</p>
+                  {typeof window !== 'undefined' && window.ic?.plug ? (
+                    <div className="text-green-600 font-medium">
+                      ✅ Plug Wallet detected!
+                    </div>
+                  ) : (
+                    <div className="text-orange-600 font-medium">
+                      ⚠️ Extension not found
+                    </div>
+                  )}
+                  
+                  <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                    <strong>💡 Developer Note:</strong><br/>
+                    This app is running on local development.<br/>
+                    URL: ucwa4-rx777-77774-qaada-cai.localhost:4943
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Stats Section */}
       <section className="py-16 bg-gray-50">
@@ -142,8 +213,8 @@ const HomePage: React.FC = () => {
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">✨ Featured Creators</h2>
-            <p className="text-gray-600 max-w-xl mx-auto">Support amazing creators who are building the future</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">✨ Featured Campaigns</h2>
+            <p className="text-gray-600 max-w-xl mx-auto">Support amazing campaigns that are making a difference</p>
           </div>
 
           {isLoading ? (
@@ -166,7 +237,7 @@ const HomePage: React.FC = () => {
                     <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">{campaign.title.charAt(0)}</div>
                     <div className="ml-3">
                       <h3 className="font-semibold text-gray-900 text-lg">{campaign.title}</h3>
-                      <p className="text-gray-500 text-sm">Creator</p>
+                      <p className="text-gray-500 text-sm">Campaign</p>
                     </div>
                   </div>
 
@@ -188,7 +259,7 @@ const HomePage: React.FC = () => {
                     to={`/campaigns/${campaign.id}`}
                     className="w-full bg-gradient-to-r from-orange-400 to-pink-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-orange-500 hover:to-pink-600 transition-all duration-200 text-center block"
                   >
-                    💝 Support Creator
+                    💝 Support Campaign
                   </Link>
                 </div>
               ))}
@@ -216,8 +287,8 @@ const HomePage: React.FC = () => {
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">💫 Why creators love us</h2>
-            <p className="text-gray-600 max-w-xl mx-auto">The easiest way to receive support from your community</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">💫 Why people love CharityChain</h2>
+            <p className="text-gray-600 max-w-xl mx-auto">The easiest way to support causes you care about</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -275,13 +346,13 @@ const HomePage: React.FC = () => {
       {/* CTA Section - Saweria Style */}
       <section className="py-16 gradient-bg text-white">
         <div className="max-w-3xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4">Ready to start receiving support? 🚀</h2>
-          <p className="text-lg mb-8 text-white/90">Join thousands of creators already using CharityChain to monetize their passion</p>
+          <h2 className="text-2xl md:text-4xl font-bold mb-4">Ready to make a difference? 🚀</h2>
+          <p className="text-lg mb-8 text-white/90">Join thousands of people supporting meaningful causes through CharityChain</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-            {wallet.isConnected ? (
+            {wallet && wallet.isConnected ? (
               <>
                 <Link to="/campaigns" className="bg-white text-orange-500 hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-colors shadow-lg">
-                  ✨ Explore Creators
+                  ✨ Explore Campaigns
                 </Link>
                 <Link to="/create-campaign" className="bg-white/20 hover:bg-white/30 backdrop-blur font-semibold py-3 px-6 rounded-full transition-colors border border-white/30">
                   🎯 Start My Page

@@ -22,7 +22,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { WalletProvider } from "./contexts/WalletContext";
+import { WalletProvider } from "./contexts/EnhancedWalletContext";
 import { ToastProvider } from "./contexts/ToastContext";
 import "./index.css";
 

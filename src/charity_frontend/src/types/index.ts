@@ -68,6 +68,6 @@ export interface CreateCampaignData {
   id: string;
   title: string;
   description: string;
-  targetAmount: bigint;
+  goalAmount: bigint;
   endDate?: bigint;
 }

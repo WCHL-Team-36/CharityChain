@@ -13,7 +13,7 @@ const CreateCampaignPage: React.FC = () => {
     id: "",
     title: "",
     description: "",
-    goalAmount: "",
+    targetAmount: "",
     endDate: "",
   });
 
@@ -40,13 +40,13 @@ const CreateCampaignPage: React.FC = () => {
     }
 
     // Validation
-    if (!formData.title.trim() || !formData.description.trim() || !formData.goalAmount) {
+    if (!formData.title.trim() || !formData.description.trim() || !formData.targetAmount) {
       showToast("error", "Missing Fields", "Please fill in all required fields");
       return;
     }
 
-    const goalAmount = parseFloat(formData.goalAmount);
-    if (goalAmount <= 0) {
+    const targetAmount = parseFloat(formData.targetAmount);
+    if (targetAmount <= 0) {
       showToast("error", "Invalid Amount", "Target amount must be greater than 0");
       return;
     }
@@ -58,7 +58,7 @@ const CreateCampaignPage: React.FC = () => {
         id: formData.id || generateCampaignId(),
         title: formData.title.trim(),
         description: formData.description.trim(),
-        goalAmount: BigInt(Math.floor(goalAmount * 100)), // Convert to smallest unit (cents)
+        targetAmount: BigInt(Math.floor(targetAmount * 100)), // Convert to smallest unit (cents)
         endDate: formData.endDate ? BigInt(new Date(formData.endDate).getTime() * 1000000) : undefined, // Convert to nanoseconds
       };
 
@@ -72,7 +72,7 @@ const CreateCampaignPage: React.FC = () => {
         id: "",
         title: "",
         description: "",
-        goalAmount: "",
+        targetAmount: "",
         endDate: "",
       });
     } catch (error: any) {
@@ -155,14 +155,14 @@ const CreateCampaignPage: React.FC = () => {
 
           {/* Target Amount */}
           <div>
-            <label htmlFor="goalAmount" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="targetAmount" className="block text-sm font-medium text-gray-700 mb-1">
               Target Amount (USD) *
             </label>
             <input
               type="number"
-              id="goalAmount"
-              name="goalAmount"
-              value={formData.goalAmount}
+              id="targetAmount"
+              name="targetAmount"
+              value={formData.targetAmount}
               onChange={handleInputChange}
               required
               min="0"
