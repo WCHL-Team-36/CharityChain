@@ -81,19 +81,14 @@ module.exports = {
         {
           from: path.join(__dirname, frontendDirectory, "public", ".ic-assets.json*"),
           to: ".ic-assets.json",
-          noErrorOnMissing: true
+          noErrorOnMissing: true,
         },
       ],
     }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: "development",
       DFX_NETWORK: "local",
-      ...Object.fromEntries(
-        Object.entries(canisters).map(([name, canister]) => [
-          `CANISTER_ID_${name.toUpperCase()}`,
-          canister[process.env.DFX_NETWORK || "local"],
-        ])
-      ),
+      ...Object.fromEntries(Object.entries(canisters).map(([name, canister]) => [`CANISTER_ID_${name.toUpperCase()}`, canister[process.env.DFX_NETWORK || "local"]])),
     }),
     new webpack.ProvidePlugin({
       Buffer: [require.resolve("buffer/"), "Buffer"],
@@ -103,7 +98,7 @@ module.exports = {
   devServer: {
     proxy: [
       {
-        context: ['/api'],
+        context: ["/api"],
         target: "http://127.0.0.1:4943",
         changeOrigin: true,
         pathRewrite: {

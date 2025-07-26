@@ -49,24 +49,12 @@ const donationCanisterIdl = ({ IDL }: any) => {
   });
 
   return IDL.Service({
-    createCampaign: IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int)],
-      [IDL.Variant({ ok: Campaign, err: DonationError })],
-      []
-    ),
+    createCampaign: IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int)], [IDL.Variant({ ok: Campaign, err: DonationError })], []),
     getCampaign: IDL.Func([IDL.Text], [IDL.Opt(Campaign)], ["query"]),
     getAllCampaigns: IDL.Func([], [IDL.Vec(Campaign)], ["query"]),
-    updateCampaign: IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Bool],
-      [IDL.Variant({ ok: Campaign, err: DonationError })],
-      []
-    ),
+    updateCampaign: IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Bool], [IDL.Variant({ ok: Campaign, err: DonationError })], []),
     deleteCampaign: IDL.Func([IDL.Text], [IDL.Variant({ ok: IDL.Null, err: DonationError })], []),
-    donate: IDL.Func(
-      [IDL.Text, IDL.Nat],
-      [IDL.Variant({ ok: Donation, err: DonationError })],
-      []
-    ),
+    donate: IDL.Func([IDL.Text, IDL.Nat], [IDL.Variant({ ok: Donation, err: DonationError })], []),
     getDonationsBycampaign: IDL.Func([IDL.Text], [IDL.Vec(Donation)], ["query"]),
     getDonationsByDonor: IDL.Func([IDL.Principal], [IDL.Vec(Donation)], ["query"]),
     getCampaignStats: IDL.Func([], [CampaignStats], ["query"]),
@@ -98,11 +86,7 @@ const nftCanisterIdl = ({ IDL }: any) => {
   });
 
   return IDL.Service({
-    mintNFT: IDL.Func(
-      [IDL.Principal, IDL.Nat, IDL.Text, IDL.Nat],
-      [IDL.Variant({ ok: IDL.Nat, err: NFTError })],
-      []
-    ),
+    mintNFT: IDL.Func([IDL.Principal, IDL.Nat, IDL.Text, IDL.Nat], [IDL.Variant({ ok: IDL.Nat, err: NFTError })], []),
     getNFTsByOwner: IDL.Func([IDL.Principal], [IDL.Vec(NFTMetadata)], ["query"]),
     getNFTMetadata: IDL.Func([IDL.Nat], [IDL.Opt(NFTMetadata)], ["query"]),
     getAllNFTs: IDL.Func([], [IDL.Vec(NFTMetadata)], ["query"]),
@@ -114,7 +98,7 @@ const LOCAL_CANISTER_CONFIG = {
   donation_canister: "u6s2n-gx777-77774-qaaba-cai",
   nft_canister: "uzt4z-lp777-77774-qaabq-cai",
   local_host: "http://127.0.0.1:4943",
-  replica_host: "http://localhost:4943"
+  replica_host: "http://localhost:4943",
 };
 
 export class UltimateCanisterService {
@@ -147,7 +131,7 @@ export class UltimateCanisterService {
   private async initializePlugActorsUltimate() {
     try {
       console.log("🚀 ULTIMATE: Creating Plug Wallet actors with specialized configuration...");
-      
+
       const plug = (window as any).ic?.plug;
       if (!plug) {
         throw new Error("Plug Wallet not available");
@@ -162,19 +146,19 @@ export class UltimateCanisterService {
       // Method 1: Try using createActor with full configuration
       try {
         console.log("🔧 ULTIMATE: Attempting Method 1 - createActor with full config");
-        
+
         this.donationActor = await plug.createActor({
           canisterId: LOCAL_CANISTER_CONFIG.donation_canister,
           interfaceFactory: donationCanisterIdl,
           host: LOCAL_CANISTER_CONFIG.local_host,
-          agent: plug.agent
+          agent: plug.agent,
         });
 
         this.nftActor = await plug.createActor({
           canisterId: LOCAL_CANISTER_CONFIG.nft_canister,
           interfaceFactory: nftCanisterIdl,
           host: LOCAL_CANISTER_CONFIG.local_host,
-          agent: plug.agent
+          agent: plug.agent,
         });
 
         console.log("✅ ULTIMATE: Method 1 successful - actors created via createActor");
@@ -207,7 +191,7 @@ export class UltimateCanisterService {
       console.log("🔧 ULTIMATE: Donation canister ID:", LOCAL_CANISTER_CONFIG.donation_canister);
       console.log("🔧 ULTIMATE: NFT canister ID:", LOCAL_CANISTER_CONFIG.nft_canister);
       console.log("🔧 ULTIMATE: Host:", LOCAL_CANISTER_CONFIG.local_host);
-      
+
       this.isInitialized = true;
     } catch (error) {
       console.error("❌ ULTIMATE: Failed to create Plug actors:", error);
@@ -248,7 +232,7 @@ export class UltimateCanisterService {
 
   async waitForInitialization(): Promise<void> {
     if (this.isInitialized) return;
-    
+
     return new Promise((resolve) => {
       const checkInit = () => {
         if (this.isInitialized) {
@@ -263,32 +247,26 @@ export class UltimateCanisterService {
 
   async createCampaign(campaignData: CreateCampaignData): Promise<Campaign> {
     await this.waitForInitialization();
-    
+
     console.log("🚀 ULTIMATE: Creating campaign:", campaignData.title);
     console.log("🔧 ULTIMATE: Campaign data:", {
       id: campaignData.id,
       title: campaignData.title,
       description: campaignData.description.substring(0, 50) + "...",
-      targetAmount: campaignData.goalAmount.toString()
+      targetAmount: campaignData.goalAmount.toString(),
     });
 
     try {
       if (this.isPlugWallet) {
         console.log("🔌 ULTIMATE: Using Plug Wallet with enhanced error handling...");
-        
+
         // Verify actor is available
         if (!this.donationActor) {
           throw new Error("Donation actor not available - please reconnect wallet");
         }
 
         // Enhanced campaign creation for Plug Wallet
-        const result = await this.donationActor.createCampaign(
-          campaignData.id,
-          campaignData.title,
-          campaignData.description,
-          campaignData.goalAmount,
-          campaignData.endDate ? [campaignData.endDate] : []
-        );
+        const result = await this.donationActor.createCampaign(campaignData.id, campaignData.title, campaignData.description, campaignData.goalAmount, campaignData.endDate ? [campaignData.endDate] : []);
 
         if ("err" in result) {
           throw new Error(`Campaign creation failed: ${Object.keys(result.err)[0]}`);
@@ -298,13 +276,7 @@ export class UltimateCanisterService {
         return result.ok;
       } else {
         // Standard wallet flow
-        const result = await this.donationActor.createCampaign(
-          campaignData.id,
-          campaignData.title,
-          campaignData.description,
-          campaignData.goalAmount,
-          campaignData.endDate ? [campaignData.endDate] : []
-        );
+        const result = await this.donationActor.createCampaign(campaignData.id, campaignData.title, campaignData.description, campaignData.goalAmount, campaignData.endDate ? [campaignData.endDate] : []);
 
         if ("err" in result) {
           throw new Error(`Campaign creation failed: ${Object.keys(result.err)[0]}`);
@@ -317,7 +289,7 @@ export class UltimateCanisterService {
       console.error("❌ ULTIMATE: Failed to create campaign:", error);
       throw {
         code: error.code || 3000,
-        message: error.message || "Unknown error occurred during campaign creation"
+        message: error.message || "Unknown error occurred during campaign creation",
       };
     }
   }

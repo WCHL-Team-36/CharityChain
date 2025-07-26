@@ -104,16 +104,17 @@ coverage/
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-# Debug files (should not be committed)
+# Debug files and temporary files
 debug*.js
-debug*.html
-test*.html
 *debug.js
-comprehensive_debug.*
-chrome_debug.*
-*test.js
 *test.html
+*.backup
 wallet-integration-examples.js
+
+# Build output directories
+src/charity_frontend/dist/
+dist/
+build/
 
 # Backup files
 *.backup

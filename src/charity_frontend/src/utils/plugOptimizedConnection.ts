@@ -17,7 +17,7 @@ class PlugOptimizedConnection {
     isApproving: false,
     lastConnectionTime: 0,
     connectionPromise: null,
-    pendingApprovals: new Set()
+    pendingApprovals: new Set(),
   };
 
   private readonly DEBOUNCE_TIME = 5000; // 5 second debounce for maximum protection
@@ -27,15 +27,15 @@ class PlugOptimizedConnection {
    */
   async connect(config: any): Promise<any> {
     const now = Date.now();
-    
+
     // Prevent double-clicking within debounce time
-    if (this.state.isConnecting || (now - this.state.lastConnectionTime < this.DEBOUNCE_TIME)) {
-      console.log('🔄 Connection already in progress or too soon, using existing promise');
+    if (this.state.isConnecting || now - this.state.lastConnectionTime < this.DEBOUNCE_TIME) {
+      console.log("🔄 Connection already in progress or too soon, using existing promise");
       if (this.state.connectionPromise) {
         return this.state.connectionPromise;
       }
       // If no promise but still within debounce time, reject
-      throw new Error('Connection request too frequent - please wait');
+      throw new Error("Connection request too frequent - please wait");
     }
 
     this.state.isConnecting = true;
@@ -61,8 +61,8 @@ class PlugOptimizedConnection {
    */
   private async performConnection(config: any): Promise<any> {
     const isDevelopment = process.env.DFX_NETWORK !== "ic";
-    
-    console.log('🔌 Starting optimized Plug connection...');
+
+    console.log("🔌 Starting optimized Plug connection...");
 
     if (!window.ic?.plug) {
       throw new Error("Plug Wallet not found");
@@ -72,11 +72,11 @@ class PlugOptimizedConnection {
     try {
       const alreadyConnected = await this.checkExistingConnection();
       if (alreadyConnected) {
-        console.log('✅ Already connected, reusing connection');
+        console.log("✅ Already connected, reusing connection");
         return true;
       }
     } catch (error) {
-      console.log('⚠️ Connection check failed, proceeding with new connection');
+      console.log("⚠️ Connection check failed, proceeding with new connection");
     }
 
     // Optimized configuration for development
@@ -86,23 +86,23 @@ class PlugOptimizedConnection {
       retries: 1, // Reduce retries
       ...(isDevelopment && {
         dev: true,
-        host: "http://127.0.0.1:4943"
-      })
+        host: "http://127.0.0.1:4943",
+      }),
     };
 
-    console.log('🔧 Using optimized config:', optimizedConfig);
+    console.log("🔧 Using optimized config:", optimizedConfig);
 
     try {
       const result = await window.ic.plug.requestConnect(optimizedConfig);
-      
+
       if (result && isDevelopment) {
         await this.optimizeAgentForDevelopment();
       }
-      
-      console.log('✅ Connection successful');
+
+      console.log("✅ Connection successful");
       return result;
     } catch (error) {
-      console.error('❌ Connection failed:', error);
+      console.error("❌ Connection failed:", error);
       throw error;
     }
   }
@@ -129,11 +129,11 @@ class PlugOptimizedConnection {
     try {
       if (window.ic?.plug?.agent) {
         const agent = window.ic.plug.agent;
-        
+
         // Set correct host
         if (agent._host !== "http://127.0.0.1:4943") {
           agent._host = "http://127.0.0.1:4943";
-          console.log('🔧 Agent host optimized for development');
+          console.log("🔧 Agent host optimized for development");
         }
 
         // Disable unnecessary root key fetching
@@ -142,12 +142,12 @@ class PlugOptimizedConnection {
             await agent.fetchRootKey();
           } catch (error) {
             // Ignore CORS errors for root key
-            console.log('⚠️ Root key fetch skipped due to CORS (expected)');
+            console.log("⚠️ Root key fetch skipped due to CORS (expected)");
           }
         }
       }
     } catch (error) {
-      console.log('⚠️ Agent optimization failed:', error.message);
+      console.log("⚠️ Agent optimization failed:", error.message);
     }
   }
 
@@ -157,32 +157,32 @@ class PlugOptimizedConnection {
   async approveTransaction(transactionFn: () => Promise<any>): Promise<any> {
     // Check if any approval is currently in progress
     if (this.state.isApproving || this.state.pendingApprovals.size > 0) {
-      console.log('🔄 Transaction approval already in progress');
-      throw new Error('Transaction approval already in progress - please wait');
+      console.log("🔄 Transaction approval already in progress");
+      throw new Error("Transaction approval already in progress - please wait");
     }
 
     // Generate unique transaction ID
     const transactionId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-    
+
     this.state.isApproving = true;
     this.state.pendingApprovals.add(transactionId);
-    
+
     try {
-      console.log('📝 Starting transaction approval...');
-      
+      console.log("📝 Starting transaction approval...");
+
       // Ensure we have a valid connection before attempting transaction
       await this.ensureValidConnection();
-      
+
       const result = await transactionFn();
-      console.log('✅ Transaction approved successfully');
+      console.log("✅ Transaction approved successfully");
       return result;
     } catch (error) {
-      console.error('❌ Transaction approval failed:', error);
+      console.error("❌ Transaction approval failed:", error);
       throw error;
     } finally {
       this.state.isApproving = false;
       this.state.pendingApprovals.delete(transactionId);
-      
+
       // Add small delay to prevent rapid successive calls
       setTimeout(() => {
         // Additional cleanup if needed
@@ -209,8 +209,8 @@ class PlugOptimizedConnection {
         throw new Error("Wallet agent not configured");
       }
     } catch (error) {
-      console.error('❌ Connection validation failed:', error);
-      throw new Error('Please reconnect your wallet');
+      console.error("❌ Connection validation failed:", error);
+      throw new Error("Please reconnect your wallet");
     }
   }
 
@@ -223,7 +223,7 @@ class PlugOptimizedConnection {
       isApproving: false,
       lastConnectionTime: 0,
       connectionPromise: null,
-      pendingApprovals: new Set()
+      pendingApprovals: new Set(),
     };
   }
 

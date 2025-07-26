@@ -21,7 +21,7 @@ class UltimatePlugConnection {
     isApproving: false,
     lastAttempt: 0,
     activePromise: null,
-    blockedUntil: 0
+    blockedUntil: 0,
   };
 
   private readonly BLOCK_DURATION = 8000; // 8 seconds complete block
@@ -39,7 +39,7 @@ class UltimatePlugConnection {
    */
   async connect(config: any): Promise<any> {
     const now = Date.now();
-    
+
     // ABSOLUTE BLOCKING - no exceptions
     if (now < this.state.blockedUntil) {
       const remainingTime = Math.ceil((this.state.blockedUntil - now) / 1000);
@@ -49,7 +49,7 @@ class UltimatePlugConnection {
 
     // If already connecting, return existing promise
     if (this.state.isConnecting && this.state.activePromise) {
-      console.log('🔄 Using existing connection attempt...');
+      console.log("🔄 Using existing connection attempt...");
       return this.state.activePromise;
     }
 
@@ -76,75 +76,74 @@ class UltimatePlugConnection {
   }
 
   private async performUltimateConnection(config: any): Promise<any> {
-    console.log('🚀 ULTIMATE: Starting Plug connection with enhanced config...');
+    console.log("🚀 ULTIMATE: Starting Plug connection with enhanced config...");
 
     // Enhanced configuration for local development
     const enhancedConfig = {
       ...config,
-      host: config.host || 'http://127.0.0.1:4943',
+      host: config.host || "http://127.0.0.1:4943",
       timeout: 60000, // Increased timeout
       dev: true,
       fetchRootKey: false, // Disable to avoid CORS
       onConnectionUpdate: () => {},
       // Add specific local development settings
       developmentMode: true,
-      skipCorsCheck: true
+      skipCorsCheck: true,
     };
 
-    console.log('🔧 ULTIMATE: Enhanced config:', {
+    console.log("🔧 ULTIMATE: Enhanced config:", {
       host: enhancedConfig.host,
       whitelist: enhancedConfig.whitelist,
-      dev: enhancedConfig.dev
+      dev: enhancedConfig.dev,
     });
 
     // Direct Plug Wallet connection with error handling
     try {
       const plug = (window as any).ic?.plug;
       if (!plug) {
-        throw new Error('Plug Wallet not available');
+        throw new Error("Plug Wallet not available");
       }
 
       // Enhanced connection request
       const connectionResult = await plug.requestConnect(enhancedConfig);
-      
+
       if (!connectionResult) {
-        throw new Error('Connection was rejected or failed');
+        throw new Error("Connection was rejected or failed");
       }
 
-      console.log('✅ ULTIMATE: Basic connection established');
+      console.log("✅ ULTIMATE: Basic connection established");
 
       // Verify connection and get principal
       const isConnected = await plug.isConnected();
       if (!isConnected) {
-        throw new Error('Connection verification failed');
+        throw new Error("Connection verification failed");
       }
 
       const principal = await plug.getPrincipal();
       if (!principal) {
-        throw new Error('Failed to get principal');
+        throw new Error("Failed to get principal");
       }
 
-      console.log('✅ ULTIMATE: Connection fully verified');
-      console.log('✅ ULTIMATE: Principal:', principal.toString());
+      console.log("✅ ULTIMATE: Connection fully verified");
+      console.log("✅ ULTIMATE: Principal:", principal.toString());
 
       // Configure agent for local development
       if (enhancedConfig.dev && plug.agent) {
         try {
           plug.agent.host = enhancedConfig.host;
-          console.log('🔧 ULTIMATE: Agent host configured for local development');
+          console.log("🔧 ULTIMATE: Agent host configured for local development");
         } catch (agentError) {
-          console.log('⚠️ ULTIMATE: Agent configuration warning (non-critical):', agentError.message);
+          console.log("⚠️ ULTIMATE: Agent configuration warning (non-critical):", agentError.message);
         }
       }
 
       return {
         principal: principal.toString(),
         agent: plug.agent,
-        isConnected: true
+        isConnected: true,
       };
-
     } catch (error) {
-      console.error('❌ ULTIMATE: Connection failed:', error);
+      console.error("❌ ULTIMATE: Connection failed:", error);
       throw error;
     }
   }
@@ -157,19 +156,19 @@ class UltimatePlugConnection {
 
     // Check if approval is blocked
     if (this.state.isApproving || now < this.state.blockedUntil) {
-      throw new Error('Transaction approval is currently blocked - please wait');
+      throw new Error("Transaction approval is currently blocked - please wait");
     }
 
     this.state.isApproving = true;
     this.state.blockedUntil = now + this.BLOCK_DURATION;
 
     try {
-      console.log('📝 ULTIMATE: Starting transaction approval...');
+      console.log("📝 ULTIMATE: Starting transaction approval...");
       const result = await transactionFn();
-      console.log('✅ ULTIMATE: Transaction approved successfully');
+      console.log("✅ ULTIMATE: Transaction approved successfully");
       return result;
     } catch (error) {
-      console.error('❌ ULTIMATE: Transaction approval failed:', error);
+      console.error("❌ ULTIMATE: Transaction approval failed:", error);
       throw error;
     } finally {
       this.state.isApproving = false;
@@ -180,13 +179,13 @@ class UltimatePlugConnection {
    * Reset the connection state (emergency use only)
    */
   reset(): void {
-    console.log('🔄 ULTIMATE: Resetting connection state');
+    console.log("🔄 ULTIMATE: Resetting connection state");
     this.state = {
       isConnecting: false,
       isApproving: false,
       lastAttempt: 0,
       activePromise: null,
-      blockedUntil: 0
+      blockedUntil: 0,
     };
   }
 
@@ -202,8 +201,7 @@ class UltimatePlugConnection {
 const ultimatePlugConnection = UltimatePlugConnection.getInstance();
 
 export const connectUltimatePlug = (config: any) => ultimatePlugConnection.connect(config);
-export const approveUltimateTransaction = (transactionFn: () => Promise<any>) => 
-  ultimatePlugConnection.approveTransaction(transactionFn);
+export const approveUltimateTransaction = (transactionFn: () => Promise<any>) => ultimatePlugConnection.approveTransaction(transactionFn);
 export const resetUltimateConnection = () => ultimatePlugConnection.reset();
 export const getUltimateConnectionState = () => ultimatePlugConnection.getState();
 

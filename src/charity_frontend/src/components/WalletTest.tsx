@@ -1,36 +1,36 @@
 // Simple Wallet Test Component
 // Add this component to test wallet connections
 
-import React, { useState } from 'react';
-import { WalletType, useWallet } from '../contexts/EnhancedWalletContext';
+import React, { useState } from "react";
+import { WalletType, useWallet } from "../contexts/EnhancedWalletContext";
 
 const WalletTest: React.FC = () => {
   const { wallet, connectWallet, disconnectWallet, isLoading, availableWallets } = useWallet();
   const [testResults, setTestResults] = useState<string[]>([]);
 
   const addTestResult = (message: string) => {
-    setTestResults(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
+    setTestResults((prev) => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
   };
 
   const testWalletConnection = async (walletType: WalletType) => {
     addTestResult(`Testing ${walletType} connection...`);
-    
+
     try {
       await connectWallet(walletType);
       addTestResult(`✅ ${walletType} connected successfully!`);
-      addTestResult(`Principal: ${wallet?.principal?.toString() || 'N/A'}`);
+      addTestResult(`Principal: ${wallet?.principal?.toString() || "N/A"}`);
     } catch (error) {
-      addTestResult(`❌ ${walletType} failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      addTestResult(`❌ ${walletType} failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
 
   const testDisconnection = async () => {
-    addTestResult('Testing disconnect...');
+    addTestResult("Testing disconnect...");
     try {
       await disconnectWallet();
-      addTestResult('✅ Wallet disconnected successfully!');
+      addTestResult("✅ Wallet disconnected successfully!");
     } catch (error) {
-      addTestResult(`❌ Disconnect failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      addTestResult(`❌ Disconnect failed: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
 
@@ -41,20 +41,20 @@ const WalletTest: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">🧪 Wallet Connection Test</h2>
-      
+
       {/* Current Status */}
       <div className="mb-6 p-4 bg-gray-50 rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Current Status:</h3>
         <p className="text-sm">
-          <span className="font-medium">Connected:</span> {(wallet && wallet.isConnected) ? '✅ Yes' : '❌ No'}
+          <span className="font-medium">Connected:</span> {wallet && wallet.isConnected ? "✅ Yes" : "❌ No"}
         </p>
         {wallet && wallet.isConnected && (
           <>
             <p className="text-sm">
-              <span className="font-medium">Wallet Type:</span> {wallet?.walletType || 'Unknown'}
+              <span className="font-medium">Wallet Type:</span> {wallet?.walletType || "Unknown"}
             </p>
             <p className="text-sm">
-              <span className="font-medium">Principal:</span> {wallet?.principal?.toString().slice(0, 30) || 'N/A'}...
+              <span className="font-medium">Principal:</span> {wallet?.principal?.toString().slice(0, 30) || "N/A"}...
             </p>
           </>
         )}
@@ -65,12 +65,7 @@ const WalletTest: React.FC = () => {
         <h3 className="text-lg font-semibold mb-3">Available Wallets:</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {availableWallets.map((walletType) => (
-            <button
-              key={walletType}
-              onClick={() => testWalletConnection(walletType)}
-              disabled={isLoading}
-              className="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
-            >
+            <button key={walletType} onClick={() => testWalletConnection(walletType)} disabled={isLoading} className="p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50">
               Test {walletType}
             </button>
           ))}
@@ -80,18 +75,11 @@ const WalletTest: React.FC = () => {
       {/* Controls */}
       <div className="mb-6 flex gap-3">
         {wallet && wallet.isConnected && (
-          <button
-            onClick={testDisconnection}
-            disabled={isLoading}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium disabled:opacity-50"
-          >
+          <button onClick={testDisconnection} disabled={isLoading} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium disabled:opacity-50">
             Test Disconnect
           </button>
         )}
-        <button
-          onClick={clearResults}
-          className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium"
-        >
+        <button onClick={clearResults} className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium">
           Clear Results
         </button>
       </div>
@@ -117,10 +105,18 @@ const WalletTest: React.FC = () => {
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <h3 className="text-lg font-semibold text-blue-800 mb-2">🔧 Testing Instructions:</h3>
         <ul className="text-sm text-blue-700 space-y-1">
-          <li>• <strong>Development Wallet:</strong> Should work instantly</li>
-          <li>• <strong>Internet Identity:</strong> Will open new tab for auth</li>
-          <li>• <strong>Plug Wallet:</strong> Requires extension installation</li>
-          <li>• <strong>Stoic Wallet:</strong> Will redirect to Stoic website</li>
+          <li>
+            • <strong>Development Wallet:</strong> Should work instantly
+          </li>
+          <li>
+            • <strong>Internet Identity:</strong> Will open new tab for auth
+          </li>
+          <li>
+            • <strong>Plug Wallet:</strong> Requires extension installation
+          </li>
+          <li>
+            • <strong>Stoic Wallet:</strong> Will redirect to Stoic website
+          </li>
         </ul>
       </div>
     </div>

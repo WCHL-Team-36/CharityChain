@@ -8,7 +8,7 @@
   isConnecting: false,
   isApproving: false,
   lastAction: 0,
-  blockUntil: 0
+  blockUntil: 0,
 };
 
 const ABSOLUTE_BLOCK_TIME = 10000; // 10 seconds absolute protection
@@ -16,11 +16,7 @@ const ABSOLUTE_BLOCK_TIME = 10000; // 10 seconds absolute protection
 /**
  * Absolute protection wrapper for any function
  */
-export const absoluteProtection = async <T>(
-  actionName: string,
-  actionFn: () => Promise<T>,
-  customBlockTime?: number
-): Promise<T> => {
+export const absoluteProtection = async <T>(actionName: string, actionFn: () => Promise<T>, customBlockTime?: number): Promise<T> => {
   const protection = (window as any).CHARITY_CHAIN_PROTECTION;
   const now = Date.now();
   const blockTime = customBlockTime || ABSOLUTE_BLOCK_TIME;
@@ -35,9 +31,9 @@ export const absoluteProtection = async <T>(
   protection.blockUntil = now + blockTime;
   protection.lastAction = now;
 
-  if (actionName === 'connect') {
+  if (actionName === "connect") {
     protection.isConnecting = true;
-  } else if (actionName === 'approve') {
+  } else if (actionName === "approve") {
     protection.isApproving = true;
   }
 
@@ -50,9 +46,9 @@ export const absoluteProtection = async <T>(
     console.error(`❌ ABSOLUTE: Protected action failed: ${actionName}`, error);
     throw error;
   } finally {
-    if (actionName === 'connect') {
+    if (actionName === "connect") {
       protection.isConnecting = false;
-    } else if (actionName === 'approve') {
+    } else if (actionName === "approve") {
       protection.isApproving = false;
     }
   }
@@ -62,62 +58,66 @@ export const absoluteProtection = async <T>(
  * Ultimate Plug Wallet Connection - Bulletproof
  */
 export const connectPlugAbsolute = async (config: any) => {
-  return absoluteProtection('connect', async () => {
-    console.log('🚀 ABSOLUTE: Starting bulletproof Plug connection...');
+  return absoluteProtection(
+    "connect",
+    async () => {
+      console.log("🚀 ABSOLUTE: Starting bulletproof Plug connection...");
 
-    const plug = (window as any).ic?.plug;
-    if (!plug) {
-      throw new Error('Plug Wallet not found');
-    }
+      const plug = (window as any).ic?.plug;
+      if (!plug) {
+        throw new Error("Plug Wallet not found");
+      }
 
-    // CRITICAL: Configure for local development BEFORE connection
-    const localConfig = {
-      ...config,
-      host: 'http://127.0.0.1:4943',
-      timeout: 60000,
-      dev: true,
-      skipCorsCheck: true
-    };
+      // CRITICAL: Configure for local development BEFORE connection
+      const localConfig = {
+        ...config,
+        host: "http://127.0.0.1:4943",
+        timeout: 60000,
+        dev: true,
+        skipCorsCheck: true,
+      };
 
-    console.log('🔧 ABSOLUTE: Using local development config:', localConfig);
+      console.log("🔧 ABSOLUTE: Using local development config:", localConfig);
 
-    // Connect with enhanced configuration
-    const connectionResult = await plug.requestConnect(localConfig);
-    
-    if (!connectionResult) {
-      throw new Error('Connection rejected');
-    }
+      // Connect with enhanced configuration
+      const connectionResult = await plug.requestConnect(localConfig);
 
-    // Force configure agent for local development
-    if (plug.agent) {
-      plug.agent.host = 'http://127.0.0.1:4943';
-      console.log('🔧 ABSOLUTE: Agent configured for local development');
-    }
+      if (!connectionResult) {
+        throw new Error("Connection rejected");
+      }
 
-    // Verify connection
-    const isConnected = await plug.isConnected();
-    if (!isConnected) {
-      throw new Error('Connection verification failed');
-    }
+      // Force configure agent for local development
+      if (plug.agent) {
+        plug.agent.host = "http://127.0.0.1:4943";
+        console.log("🔧 ABSOLUTE: Agent configured for local development");
+      }
 
-    const principal = await plug.getPrincipal();
-    if (!principal) {
-      throw new Error('Failed to get principal');
-    }
+      // Verify connection
+      const isConnected = await plug.isConnected();
+      if (!isConnected) {
+        throw new Error("Connection verification failed");
+      }
 
-    return {
-      principal: principal.toString(),
-      agent: plug.agent,
-      isConnected: true
-    };
-  }, 15000); // 15 second block for connections
+      const principal = await plug.getPrincipal();
+      if (!principal) {
+        throw new Error("Failed to get principal");
+      }
+
+      return {
+        principal: principal.toString(),
+        agent: plug.agent,
+        isConnected: true,
+      };
+    },
+    15000
+  ); // 15 second block for connections
 };
 
 /**
  * Ultimate Transaction Approval - Bulletproof
  */
 export const approveTransactionAbsolute = async <T>(transactionFn: () => Promise<T>): Promise<T> => {
-  return absoluteProtection('approve', transactionFn, 8000); // 8 second block for transactions
+  return absoluteProtection("approve", transactionFn, 8000); // 8 second block for transactions
 };
 
 /**
@@ -135,7 +135,7 @@ export const resetProtection = () => {
     isConnecting: false,
     isApproving: false,
     lastAction: 0,
-    blockUntil: 0
+    blockUntil: 0,
   };
-  console.log('🔄 ABSOLUTE: Protection state reset');
+  console.log("🔄 ABSOLUTE: Protection state reset");
 };

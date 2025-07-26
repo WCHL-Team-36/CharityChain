@@ -3,6 +3,7 @@
 ## 📋 Rangkuman Masalah & Solusi
 
 ### ❌ Masalah Yang Ditemukan:
+
 1. **Plug Wallet extension tidak terdeteksi** - aplikasi tidak bisa connect ke wallet
 2. **VS Code Simple Browser tidak mendukung extensions** - perlu browser eksternal
 3. **Wallet tidak persistent saat refresh** - perlu implementasi yang lebih robust
@@ -11,16 +12,19 @@
 ### ✅ Solusi Yang Diimplementasikan:
 
 #### 1. **Enhanced Wallet Detection & UI**
+
 - Aplikasi sekarang mendeteksi keberadaan Plug Wallet extension
 - UI menampilkan status extension (terdeteksi/tidak terdeteksi)
 - Instruksi yang jelas untuk user tentang cara setup
 
 #### 2. **Improved Error Handling & Debugging**
+
 - Logging yang detailed untuk debugging wallet connection
 - Error messages yang informatif
 - Fallback UI saat extension tidak tersedia
 
 #### 3. **Better User Experience**
+
 - Setup guide di homepage untuk user yang belum connect wallet
 - Status indicator untuk extension detection
 - Clear instructions untuk installation dan setup
@@ -28,6 +32,7 @@
 ## 🔧 Cara Menjalankan Aplikasi dengan Benar
 
 ### Prerequisites:
+
 ```bash
 # Pastikan dfx sudah running
 dfx start --clean --background
@@ -39,17 +44,20 @@ dfx deploy
 ### Setup Plug Wallet:
 
 #### Step 1: Install Plug Wallet Extension
+
 1. Buka browser **Chrome** atau **Firefox** (JANGAN gunakan VS Code Simple Browser)
 2. Download dan install [Plug Wallet Extension](https://plugwallet.ooo/)
 3. Setup wallet dengan seed phrase atau buat wallet baru
 4. Pastikan extension sudah aktif (icon Plug terlihat di browser toolbar)
 
 #### Step 2: Buka Aplikasi di Browser External
+
 1. **JANGAN** menggunakan VS Code Simple Browser
 2. Copy URL aplikasi: `http://ucwa4-rx777-77774-qaada-cai.localhost:4943/`
 3. Buka URL tersebut di **Chrome/Firefox** yang sudah ada Plug Wallet extension
 
 #### Step 3: Connect Wallet
+
 1. Klik tombol "Connect Wallet" di navigation bar
 2. UI akan menampilkan status extension:
    - ✅ Hijau: "Plug Wallet detected" - siap connect
@@ -60,24 +68,30 @@ dfx deploy
 ## 🚨 Troubleshooting
 
 ### Issue: "Plug Wallet not detected"
+
 **Penyebab:**
+
 - Extension belum terinstall
 - Menggunakan VS Code browser instead of external browser
 - Extension disabled atau belum load properly
 
 **Solusi:**
+
 1. Install Plug Wallet extension di Chrome/Firefox
 2. Buka aplikasi di browser eksternal (bukan VS Code)
 3. Refresh halaman setelah install extension
 4. Check browser extension settings (pastikan enabled)
 
 ### Issue: "Connection failed atau timeout"
+
 **Penyebab:**
+
 - Local development network belum ready
 - Canister IDs tidak match
 - Network configuration issues
 
 **Solusi:**
+
 ```bash
 # Restart dfx dan redeploy
 dfx stop
@@ -86,38 +100,46 @@ dfx deploy
 ```
 
 ### Issue: "Wallet disconnects pada refresh"
+
 **Status:** Masih dalam development
 **Workaround:** Re-connect wallet setelah refresh halaman
 
 ## 📱 Testing Tools
 
 ### Development Testing:
+
 File `plug-test.html` tersedia untuk testing Plug Wallet detection:
+
 ```bash
 # Buka file ini di browser external untuk test detection
 open /Users/bintangastawa/Downloads/WHCL/CharityChain/plug-test.html
 ```
 
 ### Browser Console Debugging:
+
 Buka Developer Tools (F12) untuk melihat detailed logs:
+
 - 🔍 Extension detection logs
-- 🔌 Connection attempt logs  
+- 🔌 Connection attempt logs
 - ❌ Error messages dengan detail
 
 ## 🎯 Goals Status
 
 ### ✅ Completed:
+
 - [x] Enhanced wallet detection UI
 - [x] Better error handling dan user guidance
 - [x] Debugging tools dan logging
 - [x] Proper browser compatibility warnings
 
 ### 🚧 In Progress:
+
 - [ ] Wallet persistence pada refresh
 - [ ] Single-click approve optimization
 - [ ] Campaign creation functionality
 
 ### 📋 Next Steps:
+
 1. **Test dengan actual Plug Wallet extension** di Chrome/Firefox
 2. **Implement silent wallet restoration** untuk persistence
 3. **Optimize transaction approval flow** untuk single-click

@@ -43,11 +43,7 @@ const donationCanisterIdl = ({ IDL }: any) => {
   });
 
   return IDL.Service({
-    createCampaign: IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int)],
-      [IDL.Variant({ ok: Campaign, err: DonationError })],
-      []
-    ),
+    createCampaign: IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int)], [IDL.Variant({ ok: Campaign, err: DonationError })], []),
     getCampaigns: IDL.Func([], [IDL.Vec(Campaign)], ["query"]),
     getCampaign: IDL.Func([IDL.Text], [IDL.Opt(Campaign)], ["query"]),
     donate: IDL.Func([IDL.Text, IDL.Nat], [IDL.Variant({ ok: IDL.Nat, err: DonationError })], []),
@@ -76,11 +72,7 @@ const nftCanisterIdl = ({ IDL }: any) => {
   });
 
   return IDL.Service({
-    mintNFT: IDL.Func(
-      [IDL.Principal, IDL.Nat, IDL.Text, IDL.Nat],
-      [IDL.Variant({ ok: IDL.Nat, err: NFTError })],
-      []
-    ),
+    mintNFT: IDL.Func([IDL.Principal, IDL.Nat, IDL.Text, IDL.Nat], [IDL.Variant({ ok: IDL.Nat, err: NFTError })], []),
     getNFTsByOwner: IDL.Func([IDL.Principal], [IDL.Vec(NFTMetadata)], ["query"]),
     getNFTMetadata: IDL.Func([IDL.Nat], [IDL.Opt(NFTMetadata)], ["query"]),
     getAllNFTs: IDL.Func([], [IDL.Vec(NFTMetadata)], ["query"]),
@@ -111,9 +103,9 @@ export class CanisterService {
         host: process.env.DFX_NETWORK === "ic" ? "https://mainnet.dfinity.network" : "http://127.0.0.1:4943",
         identity,
       });
-      
+
       console.log("🔧 CanisterService: Agent created, host:", process.env.DFX_NETWORK === "local" ? "http://127.0.0.1:4943" : "https://mainnet.dfinity.network");
-      
+
       // Initialize actors for non-Plug wallets
       this.initializeStandardActors();
     }
@@ -122,28 +114,28 @@ export class CanisterService {
   private async initializePlugActors() {
     try {
       console.log("🔧 CanisterService: Creating actors via Plug Wallet...");
-      
+
       // For local development, we need to ensure Plug uses the correct host
       const host = process.env.DFX_NETWORK === "ic" ? "https://mainnet.dfinity.network" : "http://127.0.0.1:4943";
-      
+
       // Use Plug's createActor method with proper host configuration
       this.donationActor = await (window as any).ic.plug.createActor({
         canisterId: DONATION_CANISTER_ID,
         interfaceFactory: donationCanisterIdl,
-        host: host
+        host: host,
       });
 
       this.nftActor = await (window as any).ic.plug.createActor({
         canisterId: NFT_CANISTER_ID,
         interfaceFactory: nftCanisterIdl,
-        host: host
+        host: host,
       });
 
       console.log("✅ CanisterService: Plug actors created successfully");
       console.log("🔧 CanisterService: Donation canister ID:", DONATION_CANISTER_ID);
       console.log("🔧 CanisterService: NFT canister ID:", NFT_CANISTER_ID);
       console.log("🔧 CanisterService: Host:", host);
-      
+
       this.isInitialized = true;
     } catch (error) {
       console.error("❌ CanisterService: Failed to create Plug actors:", error);
@@ -173,7 +165,7 @@ export class CanisterService {
 
     // Create actors for standard wallets
     console.log("🔧 CanisterService: Creating actors for standard wallet...");
-    
+
     this.donationActor = Actor.createActor(donationCanisterIdl, {
       agent: this.agent,
       canisterId: DONATION_CANISTER_ID,
@@ -211,18 +203,12 @@ export class CanisterService {
       // Special handling for Plug Wallet
       if ((window as any).ic?.plug && this.agent === (window as any).ic.plug.agent) {
         console.log("🔧 CanisterService: Using Plug Wallet with existing actor...");
-        
+
         if (!this.donationActor) {
           throw new Error("Donation actor not initialized for Plug Wallet");
         }
-        
-        const result = await this.donationActor.createCampaign(
-          data.id, 
-          data.title, 
-          data.description, 
-          data.goalAmount, 
-          data.endDate ? [data.endDate] : []
-        );
+
+        const result = await this.donationActor.createCampaign(data.id, data.title, data.description, data.goalAmount, data.endDate ? [data.endDate] : []);
 
         if (result.ok) {
           console.log("✅ CanisterService: Campaign created successfully");
@@ -233,13 +219,7 @@ export class CanisterService {
         }
       } else {
         // Standard wallet logic
-        const result = await this.donationActor.createCampaign(
-          data.id, 
-          data.title, 
-          data.description, 
-          data.goalAmount, 
-          data.endDate ? [data.endDate] : []
-        );
+        const result = await this.donationActor.createCampaign(data.id, data.title, data.description, data.goalAmount, data.endDate ? [data.endDate] : []);
 
         if (result.ok) {
           console.log("✅ CanisterService: Campaign created successfully");

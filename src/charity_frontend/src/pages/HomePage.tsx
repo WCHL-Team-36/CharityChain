@@ -17,15 +17,12 @@ const HomePage: React.FC = () => {
   const loadData = async () => {
     try {
       setIsLoading(true);
-      
+
       // Use canister service (can work without wallet for reading)
       const canisterService = getCanisterService();
 
       try {
-        const [statsData, campaigns] = await Promise.all([
-          canisterService.getTotalStats(), 
-          canisterService.getCampaigns()
-        ]);
+        const [statsData, campaigns] = await Promise.all([canisterService.getTotalStats(), canisterService.getCampaigns()]);
 
         setStats(statsData);
         // Show top 3 campaigns by progress
@@ -93,7 +90,7 @@ const HomePage: React.FC = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-3">🔗 Get Started</h2>
               <p className="text-gray-600">Connect your Plug Wallet to start donating or creating campaigns</p>
             </div>
-            
+
             <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -103,7 +100,12 @@ const HomePage: React.FC = () => {
                       <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</span>
                       <div>
                         <p className="font-medium text-gray-900">Install Plug Wallet</p>
-                        <p className="text-sm text-gray-600">Download the browser extension from <a href="https://plugwallet.ooo/" target="_blank" className="text-blue-600 underline">plugwallet.ooo</a></p>
+                        <p className="text-sm text-gray-600">
+                          Download the browser extension from{" "}
+                          <a href="https://plugwallet.ooo/" target="_blank" className="text-blue-600 underline">
+                            plugwallet.ooo
+                          </a>
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-start">
@@ -122,25 +124,19 @@ const HomePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="bg-gradient-to-br from-purple-500 to-blue-500 w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center">
                     <span className="text-white text-4xl font-bold">P</span>
                   </div>
                   <p className="text-gray-600 mb-4">Wallet Status</p>
-                  {typeof window !== 'undefined' && window.ic?.plug ? (
-                    <div className="text-green-600 font-medium">
-                      ✅ Plug Wallet detected!
-                    </div>
-                  ) : (
-                    <div className="text-orange-600 font-medium">
-                      ⚠️ Extension not found
-                    </div>
-                  )}
-                  
+                  {typeof window !== "undefined" && window.ic?.plug ? <div className="text-green-600 font-medium">✅ Plug Wallet detected!</div> : <div className="text-orange-600 font-medium">⚠️ Extension not found</div>}
+
                   <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
-                    <strong>💡 Developer Note:</strong><br/>
-                    This app is running on local development.<br/>
+                    <strong>💡 Developer Note:</strong>
+                    <br />
+                    This app is running on local development.
+                    <br />
                     URL: ucwa4-rx777-77774-qaada-cai.localhost:4943
                   </div>
                 </div>

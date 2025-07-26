@@ -140,7 +140,7 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
               if (!attempt.privateKey) {
                 console.log("🔌 PLUG WALLET RESTORATION: No privateKey - using Principal directly");
                 const restoredPrincipal = Principal.fromText(attempt.principal);
-                
+
                 const walletState = {
                   principal: restoredPrincipal,
                   isConnected: true,
@@ -154,7 +154,7 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 console.log("🎉🎉🎉 PLUG WALLET RESTORATION COMPLETED SUCCESSFULLY!");
                 console.log("🎉 Strategy used:", attempt.name);
                 console.log("🎉 Principal:", restoredPrincipal.toString());
-                
+
                 return true;
               }
 
