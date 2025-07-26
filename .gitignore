@@ -111,5 +111,13 @@ test*.html
 *debug.js
 comprehensive_debug.*
 chrome_debug.*
+*test.js
+*test.html
+wallet-integration-examples.js
+
+# Backup files
+*.backup
+*.bak
+*.orig
 
 charity_app
