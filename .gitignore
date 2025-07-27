@@ -106,10 +106,18 @@ coverage/
 
 # Debug files and temporary files
 debug*.js
+debug*.html
 *debug.js
 *test.html
-*.backup
+*test.js
+test*.html
+test*.js
+minimal-test.*
+plug-test.*
+chrome_debug.*
+comprehensive_debug.*
 wallet-integration-examples.js
+*.backup
 
 # Build output directories
 src/charity_frontend/dist/
@@ -120,5 +128,3 @@ build/
 *.backup
 *.bak
 *.orig
-
-charity_app

@@ -11,6 +11,7 @@ export interface Campaign {
   createdAt: bigint;
   endDate?: bigint;
   withdrawable: boolean;
+  imageUrl?: string;
 }
 
 export interface Donation {
@@ -70,4 +71,5 @@ export interface CreateCampaignData {
   description: string;
   goalAmount: bigint;
   endDate?: bigint;
+  imageUrl?: string;
 }
