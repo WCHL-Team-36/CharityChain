@@ -10,14 +10,7 @@ export interface ImageUploadProps {
   className?: string;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({ 
-  onImageSelect, 
-  onImageRemove, 
-  currentImage, 
-  maxSize = 10, 
-  acceptedTypes = ["image/jpeg", "image/png", "image/webp"], 
-  className = "" 
-}) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect, onImageRemove, currentImage, maxSize = 10, acceptedTypes = ["image/jpeg", "image/png", "image/webp"], className = "" }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +32,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const compressImage = async (file: File): Promise<File> => {
     console.log("🚀 COMPRESSION START: Processing file", file.name);
     console.log("🚀 ORIGINAL SIZE:", (file.size / 1024 / 1024).toFixed(2), "MB");
-    
+
     const options = {
       maxSizeMB: 0.8,
       maxWidthOrHeight: 1200,
@@ -51,13 +44,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       console.log("🔧 COMPRESSION OPTIONS:", options);
       const compressedFile = await imageCompression(file, options);
-      
+
       const originalMB = (file.size / 1024 / 1024).toFixed(2);
       const compressedMB = (compressedFile.size / 1024 / 1024).toFixed(2);
-      
+
       console.log("✅ COMPRESSION SUCCESS:", originalMB, "MB →", compressedMB, "MB");
       console.log("✅ FINAL SIZE (bytes):", compressedFile.size);
-      
+
       if (compressedFile.size > 700 * 1024) {
         console.log("⚠️ STILL TOO LARGE, APPLYING ULTRA COMPRESSION...");
         const ultraOptions = {
@@ -67,14 +60,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           fileType: "image/jpeg",
           quality: 0.4,
         };
-        
+
         const finalFile = await imageCompression(compressedFile, ultraOptions);
         const finalMB = (finalFile.size / 1024 / 1024).toFixed(2);
         console.log("🔥 ULTRA COMPRESSION RESULT:", finalMB, "MB");
         console.log("🔥 ULTRA FINAL SIZE (bytes):", finalFile.size);
         return finalFile;
       }
-      
+
       return compressedFile;
     } catch (error) {
       console.error("❌ COMPRESSION ERROR:", error);
@@ -85,7 +78,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const processFile = useCallback(
     async (file: File) => {
       console.log("🎯 PROCESS FILE START:", file.name, "Size:", (file.size / 1024 / 1024).toFixed(2), "MB");
-      
+
       setError(null);
       setIsLoading(true);
 
