@@ -103,6 +103,28 @@ const CampaignsPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {campaigns.map((campaign) => (
               <div key={campaign.id} className="bg-white rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+                {/* Campaign Image */}
+                <div className="relative h-48 bg-gray-200">
+                  {campaign.imageUrl ? (
+                    <img
+                      src={campaign.imageUrl}
+                      alt={campaign.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback if image fails to load
+                        e.currentTarget.style.display = "none";
+                        e.currentTarget.nextElementSibling?.classList.remove("hidden");
+                      }}
+                    />
+                  ) : null}
+                  <div className={`${campaign.imageUrl ? "hidden" : ""} absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center`}>
+                    <div className="text-center text-white">
+                      <div className="text-6xl mb-2">🎯</div>
+                      <p className="text-sm font-medium">Campaign Image</p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Campaign Header */}
                 <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
                   <h3 className="text-xl font-bold text-white truncate">{campaign.title}</h3>

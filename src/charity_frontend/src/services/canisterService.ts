@@ -24,7 +24,8 @@ const donationCanisterIdl = ({ IDL }: any) => {
     isActive: IDL.Bool,
     endDate: IDL.Opt(IDL.Int),
     createdAt: IDL.Int,
-    nftThreshold: IDL.Opt(IDL.Nat),
+    withdrawable: IDL.Bool,
+    imageUrl: IDL.Opt(IDL.Text),
   });
 
   const Donation = IDL.Record({
@@ -43,7 +44,7 @@ const donationCanisterIdl = ({ IDL }: any) => {
   });
 
   return IDL.Service({
-    createCampaign: IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int)], [IDL.Variant({ ok: Campaign, err: DonationError })], []),
+    createCampaign: IDL.Func([IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Opt(IDL.Int), IDL.Opt(IDL.Text)], [IDL.Variant({ ok: Campaign, err: DonationError })], []),
     getCampaigns: IDL.Func([], [IDL.Vec(Campaign)], ["query"]),
     getCampaign: IDL.Func([IDL.Text], [IDL.Opt(Campaign)], ["query"]),
     donate: IDL.Func([IDL.Text, IDL.Nat], [IDL.Variant({ ok: IDL.Nat, err: DonationError })], []),
@@ -208,7 +209,7 @@ export class CanisterService {
           throw new Error("Donation actor not initialized for Plug Wallet");
         }
 
-        const result = await this.donationActor.createCampaign(data.id, data.title, data.description, data.goalAmount, data.endDate ? [data.endDate] : []);
+        const result = await this.donationActor.createCampaign(data.id, data.title, data.description, data.goalAmount, data.endDate ? [data.endDate] : [], data.imageUrl ? [data.imageUrl] : []);
 
         if (result.ok) {
           console.log("✅ CanisterService: Campaign created successfully");
@@ -219,7 +220,7 @@ export class CanisterService {
         }
       } else {
         // Standard wallet logic
-        const result = await this.donationActor.createCampaign(data.id, data.title, data.description, data.goalAmount, data.endDate ? [data.endDate] : []);
+        const result = await this.donationActor.createCampaign(data.id, data.title, data.description, data.goalAmount, data.endDate ? [data.endDate] : [], data.imageUrl ? [data.imageUrl] : []);
 
         if (result.ok) {
           console.log("✅ CanisterService: Campaign created successfully");

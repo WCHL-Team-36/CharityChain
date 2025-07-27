@@ -38,6 +38,7 @@ actor DonationCanister {
   createdAt: Int;
   endDate: ?Int;
   withdrawable: Bool;
+  imageUrl: ?Text;
 };
 
     public type DonationError = {
@@ -90,8 +91,9 @@ actor DonationCanister {
         id: Text,
         title: Text, 
         description: Text,
-        targetAmount: Nat,
-        endDate: ?Int
+        goalAmount: Nat,
+        endDate: ?Int,
+        imageUrl: ?Text
     ): async Result<Campaign, Text> {
         
         // Input validation
@@ -104,8 +106,8 @@ actor DonationCanister {
         if (Text.size(description) == 0) {
             return #err("Campaign description cannot be empty");
         };
-        if (targetAmount == 0) {
-            return #err("Target amount must be greater than 0");
+        if (goalAmount == 0) {
+            return #err("Goal amount must be greater than 0");
         };
         
         // Check if campaign already exists
@@ -119,12 +121,13 @@ actor DonationCanister {
             title = title;
             description = description;
             recipient = msg.caller;
-            goalAmount = targetAmount;
+            goalAmount = goalAmount;
             currentAmount = 0;
             isActive = true;
             createdAt = Time.now();
             endDate = endDate;
             withdrawable = false;
+            imageUrl = imageUrl;
         };
         
         campaigns.put(id, campaign);

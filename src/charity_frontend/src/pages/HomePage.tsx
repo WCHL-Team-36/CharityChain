@@ -67,15 +67,15 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Saweria Style */}
-      <section className="bg-gradient-to-br from-orange-400 via-red-400 to-pink-500 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">Support creators you love ❤️</h1>
-          <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">Send crypto donations to creators with ckUSDT on Internet Computer. 100% transparent, low fees, instant delivery.</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-            <Link to="/campaigns" className="bg-white text-orange-500 hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-colors shadow-lg">
+      <section className="py-16 text-white bg-gradient-to-br from-orange-400 via-red-400 to-pink-500">
+        <div className="max-w-4xl px-4 mx-auto text-center sm:px-6 lg:px-8">
+          <h1 className="mb-4 text-3xl font-bold md:text-5xl">Support creators you love ❤️</h1>
+          <p className="max-w-2xl mx-auto mb-8 text-lg md:text-xl text-white/90">Send crypto donations to creators with ckUSDT on Internet Computer. 100% transparent, low fees, instant delivery.</p>
+          <div className="flex flex-col justify-center max-w-md gap-3 mx-auto sm:flex-row">
+            <Link to="/campaigns" className="px-6 py-3 font-semibold text-orange-500 transition-colors bg-white rounded-full shadow-lg hover:bg-gray-100">
               ✨ Discover Campaigns
             </Link>
-            <Link to="/create-campaign" className="bg-white/20 hover:bg-white/30 backdrop-blur font-semibold py-3 px-6 rounded-full transition-colors border border-white/30">
+            <Link to="/create-campaign" className="px-6 py-3 font-semibold transition-colors border rounded-full bg-white/20 hover:bg-white/30 backdrop-blur border-white/30">
               🚀 Start Receiving
             </Link>
           </div>
@@ -84,17 +84,17 @@ const HomePage: React.FC = () => {
 
       {/* Wallet Setup Guide - Show only if wallet not connected */}
       {!wallet?.isConnected && (
-        <section className="py-12 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">🔗 Get Started</h2>
+        <section className="py-12 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="max-w-4xl px-4 mx-auto sm:px-6 lg:px-8">
+            <div className="mb-8 text-center">
+              <h2 className="mb-3 text-2xl font-bold text-gray-900">🔗 Get Started</h2>
               <p className="text-gray-600">Connect your Plug Wallet to start donating or creating campaigns</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
-              <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="p-6 bg-white shadow-lg rounded-xl md:p-8">
+              <div className="grid items-center gap-8 md:grid-cols-2">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Setup Guide</h3>
+                  <h3 className="mb-4 text-xl font-semibold text-gray-900">Quick Setup Guide</h3>
                   <div className="space-y-4">
                     <div className="flex items-start">
                       <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</span>
@@ -126,13 +126,13 @@ const HomePage: React.FC = () => {
                 </div>
 
                 <div className="text-center">
-                  <div className="bg-gradient-to-br from-purple-500 to-blue-500 w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-white text-4xl font-bold">P</span>
+                  <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
+                    <span className="text-4xl font-bold text-white">P</span>
                   </div>
-                  <p className="text-gray-600 mb-4">Wallet Status</p>
-                  {typeof window !== "undefined" && window.ic?.plug ? <div className="text-green-600 font-medium">✅ Plug Wallet detected!</div> : <div className="text-orange-600 font-medium">⚠️ Extension not found</div>}
+                  <p className="mb-4 text-gray-600">Wallet Status</p>
+                  {typeof window !== "undefined" && window.ic?.plug ? <div className="font-medium text-green-600">✅ Plug Wallet detected!</div> : <div className="font-medium text-orange-600">⚠️ Extension not found</div>}
 
-                  <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
+                  <div className="p-3 mt-4 text-xs text-gray-500 rounded-lg bg-gray-50">
                     <strong>💡 Developer Note:</strong>
                     <br />
                     This app is running on local development.
@@ -148,36 +148,36 @@ const HomePage: React.FC = () => {
 
       {/* Stats Section */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Making a Difference Together</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Join thousands of donors who are creating positive change through transparent blockchain donations.</p>
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-gray-900">Making a Difference Together</h2>
+            <p className="max-w-2xl mx-auto text-gray-600">Join thousands of donors who are creating positive change through transparent blockchain donations.</p>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="card p-8 text-center">
-                  <div className="h-12 w-12 bg-gray-200 rounded-full mx-auto mb-4 loading-pulse"></div>
-                  <div className="h-8 bg-gray-200 rounded mb-2 loading-pulse"></div>
+                <div key={i} className="p-8 text-center card">
+                  <div className="w-12 h-12 mx-auto mb-4 bg-gray-200 rounded-full loading-pulse"></div>
+                  <div className="h-8 mb-2 bg-gray-200 rounded loading-pulse"></div>
                   <div className="h-4 bg-gray-200 rounded loading-pulse"></div>
                 </div>
               ))}
             </div>
           ) : stats ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="card p-8 text-center">
-                <div className="w-12 h-12 bg-charity-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="p-8 text-center card">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-charity-100">
                   <svg className="w-6 h-6 text-charity-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-2">{formatAmount(stats.totalAmount)} ckUSDT</h3>
+                <h3 className="mb-2 text-3xl font-bold text-gray-900">{formatAmount(stats.totalAmount)} ckUSDT</h3>
                 <p className="text-gray-600">Total Donated</p>
               </div>
 
-              <div className="card p-8 text-center">
-                <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="p-8 text-center card">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-primary-100">
                   <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -187,17 +187,17 @@ const HomePage: React.FC = () => {
                     />
                   </svg>
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-2">{Number(stats.totalDonations).toLocaleString()}</h3>
+                <h3 className="mb-2 text-3xl font-bold text-gray-900">{Number(stats.totalDonations).toLocaleString()}</h3>
                 <p className="text-gray-600">Total Donations</p>
               </div>
 
-              <div className="card p-8 text-center">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="p-8 text-center card">
+                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-yellow-100 rounded-full">
                   <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-2">{Number(stats.totalCampaigns).toLocaleString()}</h3>
+                <h3 className="mb-2 text-3xl font-bold text-gray-900">{Number(stats.totalCampaigns).toLocaleString()}</h3>
                 <p className="text-gray-600">Active Campaigns</p>
               </div>
             </div>
@@ -207,53 +207,53 @@ const HomePage: React.FC = () => {
 
       {/* Featured Creators */}
       <section className="py-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">✨ Featured Campaigns</h2>
-            <p className="text-gray-600 max-w-xl mx-auto">Support amazing campaigns that are making a difference</p>
+        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="mb-8 text-center">
+            <h2 className="mb-3 text-2xl font-bold text-gray-900 md:text-3xl">✨ Featured Campaigns</h2>
+            <p className="max-w-xl mx-auto text-gray-600">Support amazing campaigns that are making a difference</p>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="card p-6">
-                  <div className="h-48 bg-gray-200 rounded mb-4 loading-pulse"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-2 loading-pulse"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4 loading-pulse"></div>
+                <div key={i} className="p-6 card">
+                  <div className="h-48 mb-4 bg-gray-200 rounded loading-pulse"></div>
+                  <div className="h-6 mb-2 bg-gray-200 rounded loading-pulse"></div>
+                  <div className="h-4 mb-4 bg-gray-200 rounded loading-pulse"></div>
                   <div className="h-2 bg-gray-200 rounded loading-pulse"></div>
                 </div>
               ))}
             </div>
           ) : featuredCampaigns.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {featuredCampaigns.map((campaign) => (
-                <div key={campaign.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-100 hover:-translate-y-1">
+                <div key={campaign.id} className="p-6 transition-all duration-200 bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-xl hover:-translate-y-1">
                   {/* Creator Avatar */}
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">{campaign.title.charAt(0)}</div>
+                    <div className="flex items-center justify-center w-12 h-12 text-lg font-bold text-white rounded-full bg-gradient-to-br from-orange-400 to-pink-500">{campaign.title.charAt(0)}</div>
                     <div className="ml-3">
-                      <h3 className="font-semibold text-gray-900 text-lg">{campaign.title}</h3>
-                      <p className="text-gray-500 text-sm">Campaign</p>
+                      <h3 className="text-lg font-semibold text-gray-900">{campaign.title}</h3>
+                      <p className="text-sm text-gray-500">Campaign</p>
                     </div>
                   </div>
 
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">{campaign.description}</p>
+                  <p className="mb-4 text-sm leading-relaxed text-gray-600 line-clamp-2">{campaign.description}</p>
 
                   {/* Stats */}
-                  <div className="bg-gray-50 rounded-xl p-3 mb-4">
-                    <div className="flex justify-between items-center mb-2">
+                  <div className="p-3 mb-4 bg-gray-50 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-gray-600">Raised</span>
                       <span className="font-semibold text-gray-900">{formatAmount(campaign.currentAmount)} ckUSDT</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-orange-400 to-pink-500 h-2 rounded-full transition-all duration-300" style={{ width: `${Math.min(getProgress(campaign.currentAmount, campaign.goalAmount), 100)}%` }}></div>
+                    <div className="w-full h-2 bg-gray-200 rounded-full">
+                      <div className="h-2 transition-all duration-300 rounded-full bg-gradient-to-r from-orange-400 to-pink-500" style={{ width: `${Math.min(getProgress(campaign.currentAmount, campaign.goalAmount), 100)}%` }}></div>
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">Goal: {formatAmount(campaign.goalAmount)} ckUSDT</div>
+                    <div className="mt-1 text-xs text-gray-500">Goal: {formatAmount(campaign.goalAmount)} ckUSDT</div>
                   </div>
 
                   <Link
                     to={`/campaigns/${campaign.id}`}
-                    className="w-full bg-gradient-to-r from-orange-400 to-pink-500 text-white font-semibold py-3 px-4 rounded-xl hover:from-orange-500 hover:to-pink-600 transition-all duration-200 text-center block"
+                    className="block w-full px-4 py-3 font-semibold text-center text-white transition-all duration-200 bg-gradient-to-r from-orange-400 to-pink-500 rounded-xl hover:from-orange-500 hover:to-pink-600"
                   >
                     💝 Support Campaign
                   </Link>
@@ -261,8 +261,8 @@ const HomePage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">No campaigns available yet.</p>
+            <div className="py-12 text-center">
+              <p className="mb-4 text-gray-500">No campaigns available yet.</p>
               <Link to="/create-campaign" className="btn-primary">
                 Create the First Campaign
               </Link>
@@ -270,7 +270,7 @@ const HomePage: React.FC = () => {
           )}
 
           {featuredCampaigns.length > 0 && (
-            <div className="text-center mt-12">
+            <div className="mt-12 text-center">
               <Link to="/campaigns" className="btn-secondary">
                 View All Campaigns
               </Link>
@@ -281,57 +281,57 @@ const HomePage: React.FC = () => {
 
       {/* Features Section - Saweria Style */}
       <section className="py-12 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">💫 Why people love CharityChain</h2>
-            <p className="text-gray-600 max-w-xl mx-auto">The easiest way to support causes you care about</p>
+        <div className="max-w-4xl px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="mb-10 text-center">
+            <h2 className="mb-3 text-2xl font-bold text-gray-900 md:text-3xl">� HOMEPAGE TEST BERHASIL! 🚨</h2>
+            <p className="max-w-xl mx-auto text-gray-600">The easiest way to support causes you care about</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="p-6 bg-white border border-gray-100 rounded-2xl">
               <div className="flex items-start">
-                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mr-4">
+                <div className="flex items-center justify-center w-12 h-12 mr-4 bg-orange-100 rounded-xl">
                   <span className="text-2xl">⚡</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Instant & Transparent</h3>
-                  <p className="text-gray-600 text-sm">Every donation is recorded on blockchain. No hidden fees, no delays.</p>
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">Instant & Transparent</h3>
+                  <p className="text-sm text-gray-600">Every donation is recorded on blockchain. No hidden fees, no delays.</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+            <div className="p-6 bg-white border border-gray-100 rounded-2xl">
               <div className="flex items-start">
-                <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mr-4">
+                <div className="flex items-center justify-center w-12 h-12 mr-4 bg-pink-100 rounded-xl">
                   <span className="text-2xl">💎</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">NFT Receipts</h3>
-                  <p className="text-gray-600 text-sm">Supporters get unique NFTs as proof of their contribution.</p>
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">NFT Receipts</h3>
+                  <p className="text-sm text-gray-600">Supporters get unique NFTs as proof of their contribution.</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+            <div className="p-6 bg-white border border-gray-100 rounded-2xl">
               <div className="flex items-start">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
+                <div className="flex items-center justify-center w-12 h-12 mr-4 bg-green-100 rounded-xl">
                   <span className="text-2xl">🌍</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Global Payments</h3>
-                  <p className="text-gray-600 text-sm">Receive support from anywhere in the world with ckUSDT.</p>
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">Global Payments</h3>
+                  <p className="text-sm text-gray-600">Receive support from anywhere in the world with ckUSDT.</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-gray-100">
+            <div className="p-6 bg-white border border-gray-100 rounded-2xl">
               <div className="flex items-start">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4">
+                <div className="flex items-center justify-center w-12 h-12 mr-4 bg-purple-100 rounded-xl">
                   <span className="text-2xl">🔒</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
-                  <p className="text-gray-600 text-sm">Built on Internet Computer with enterprise-grade security.</p>
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">Secure & Reliable</h3>
+                  <p className="text-sm text-gray-600">Built on Internet Computer with enterprise-grade security.</p>
                 </div>
               </div>
             </div>
@@ -340,22 +340,22 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section - Saweria Style */}
-      <section className="py-16 gradient-bg text-white">
-        <div className="max-w-3xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4">Ready to make a difference? 🚀</h2>
-          <p className="text-lg mb-8 text-white/90">Join thousands of people supporting meaningful causes through CharityChain</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
+      <section className="py-16 text-white gradient-bg">
+        <div className="max-w-3xl px-4 mx-auto text-center sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-2xl font-bold md:text-4xl">Ready to make a difference? 🚀</h2>
+          <p className="mb-8 text-lg text-white/90">Join thousands of people supporting meaningful causes through CharityChain</p>
+          <div className="flex flex-col justify-center max-w-lg gap-4 mx-auto sm:flex-row">
             {wallet && wallet.isConnected ? (
               <>
-                <Link to="/campaigns" className="bg-white text-orange-500 hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-colors shadow-lg">
+                <Link to="/campaigns" className="px-6 py-3 font-semibold text-orange-500 transition-colors bg-white rounded-full shadow-lg hover:bg-gray-100">
                   ✨ Explore Campaigns
                 </Link>
-                <Link to="/create-campaign" className="bg-white/20 hover:bg-white/30 backdrop-blur font-semibold py-3 px-6 rounded-full transition-colors border border-white/30">
+                <Link to="/create-campaign" className="px-6 py-3 font-semibold transition-colors border rounded-full bg-white/20 hover:bg-white/30 backdrop-blur border-white/30">
                   🎯 Start My Page
                 </Link>
               </>
             ) : (
-              <div className="bg-white/20 backdrop-blur font-semibold py-3 px-6 rounded-full border border-white/30">Connect your wallet to get started ⭐</div>
+              <div className="px-6 py-3 font-semibold border rounded-full bg-white/20 backdrop-blur border-white/30">Connect your wallet to get started ⭐</div>
             )}
           </div>
         </div>
